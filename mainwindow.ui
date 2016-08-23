@@ -19,31 +19,56 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>434</width>
-      <height>227</height>
+      <width>436</width>
+      <height>253</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="monthLabel">
          <property name="text">
           <string>TextLabel</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="navHLayout">
+         <item>
+          <widget class="QPushButton" name="prevButton">
+           <property name="text">
+            <string>prev</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="todayButton">
+           <property name="text">
+            <string>Today</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="nextButton">
+           <property name="text">
+            <string>next</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
      <item>
-      <widget class="QCalendarWidget" name="calendarWidget"/>
+      <widget class="MyCalendarWidget" name="calendarWidget">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>197</height>
+        </size>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -69,6 +94,13 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MyCalendarWidget</class>
+   <extends>QCalendarWidget</extends>
+   <header location="global">mycalendarwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

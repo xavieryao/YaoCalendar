@@ -21,6 +21,11 @@ public:
 private:
     Ui::MainWindow *ui;
     QCalendarWidget *m_calendar;
+
+    void setUpCalendarNavigator();
+
+private slots:
+    void formatAndSetMonthLabel(int year, int month);
 };
 
 #endif // MAINWINDOW_H
