@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    mycalendarwidget.cpp
+    mycalendarwidget.cpp \
+    sidebar.cpp
 
 HEADERS  += mainwindow.h \
-    mycalendarwidget.h
+    mycalendarwidget.h \
+    sidebar.h
 
 FORMS    += mainwindow.ui
 

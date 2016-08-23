@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QFont>
+#include <QResizeEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,7 +15,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->calendarWidget->setNavigationBarVisible(false);
     setUpCalendarNavigator();
-    setCentralWidget(ui->verticalLayoutWidget);
+
+    mSideBar = new SideBar(this);
+    mSideBar->setFixedWidth(SIDE_BAR_WIDTH);
+    ui->centralHorizontalLayout->addWidget(mSideBar);
+
+    QWidget* centralWidget = new QWidget(this);
+    centralWidget->setLayout(ui->centralHorizontalLayout);
+    setCentralWidget(centralWidget);
+
+    if (this->size().width() < this->MIN_WIDTH_WITH_SIDEBAR) {
+        mSideBar->setVisible(false);
+    }
 }
 
 MainWindow::~MainWindow()
@@ -50,4 +62,10 @@ void MainWindow::setUpCalendarNavigator() {
 
 void MainWindow::formatAndSetMonthLabel(int year, int month) {
     ui->monthLabel->setText(tr("%1-%2").arg(year).arg(month));
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event) {
+    QMainWindow::resizeEvent(event);
+    qDebug() << "current width:" << event->size().width();
+    mSideBar->setVisible(event->size().width() >= MIN_WIDTH_WITH_SIDEBAR);
 }
