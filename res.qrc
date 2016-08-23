@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/Font">
+        <file alias="fontawesome">res/fontawesome-webfont.ttf</file>
+        <file alias="nevis">res/nevis.ttf</file>
+    </qresource>
+    <qresource prefix="/stylesheet">
+        <file alias="global">res/style.qss</file>
+    </qresource>
+</RCC>

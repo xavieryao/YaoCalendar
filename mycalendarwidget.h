@@ -2,6 +2,7 @@
 #define MYCALENDARWIDGET_H
 
 #include <QCalendarWidget>
+#include <QVBoxLayout>
 
 class MyCalendarWidget : public QCalendarWidget
 {

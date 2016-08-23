@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFile>
+#include <QFontDatabase>
 #include "mycalendarwidget.h"
 
 namespace Ui {

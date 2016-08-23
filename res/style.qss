@@ -1,0 +1,5 @@
+QLabel
+{
+font-family:nevis;
+font-size:36px;
+}

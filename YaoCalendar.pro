@@ -20,3 +20,8 @@ HEADERS  += mainwindow.h \
     mycalendarwidget.h
 
 FORMS    += mainwindow.ui
+
+DISTFILES +=
+
+RESOURCES += \
+    res.qrc
