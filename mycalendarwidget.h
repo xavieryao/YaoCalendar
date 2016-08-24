@@ -2,7 +2,6 @@
 #define MYCALENDARWIDGET_H
 
 #include <QCalendarWidget>
-#include <QVBoxLayout>
 #include "eventmap.h"
 
 class MyCalendarWidget : public QCalendarWidget
@@ -16,7 +15,6 @@ protected:
 
 private:
     EventMap* mEventMap = NULL;
-
 };
 
 #endif // MYCALENDARWIDGET_H
