@@ -27,11 +27,23 @@ MainWindow::MainWindow(QWidget *parent) :
     if (this->size().width() < this->MIN_WIDTH_WITH_SIDEBAR) {
         mSideBar->setVisible(false);
     }
+
+    // DEBUG
+    QDate today(2016,8,23);
+    QList<QString> events;
+    events.append("Eat");
+    events.append("Drink");
+    events.append("Litter");
+
+    mEventMap = new EventMap();
+    mEventMap->insert(today, events);
+    ui->calendarWidget->setEventMap(mEventMap);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete mEventMap;
 }
 
 void MainWindow::setUpCalendarNavigator() {
@@ -61,11 +73,10 @@ void MainWindow::setUpCalendarNavigator() {
 }
 
 void MainWindow::formatAndSetMonthLabel(int year, int month) {
-    ui->monthLabel->setText(tr("%1-%2").arg(year).arg(month));
+    ui->monthLabel->setText(tr("%1 - %2").arg(year).arg(month));
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
-    qDebug() << "current width:" << event->size().width();
     mSideBar->setVisible(event->size().width() >= MIN_WIDTH_WITH_SIDEBAR);
 }

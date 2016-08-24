@@ -1,4 +1,5 @@
 #include "mycalendarwidget.h"
+#include <QDebug>
 
 MyCalendarWidget::MyCalendarWidget(QWidget* parent) : QCalendarWidget(parent)
 {
@@ -7,6 +8,11 @@ MyCalendarWidget::MyCalendarWidget(QWidget* parent) : QCalendarWidget(parent)
 
 void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDate &date) const
 {
-   //qDebug()<<"come in paintCell"<<endl;
-   QCalendarWidget::paintCell(painter, rect, date);
+    if (mEventMap == NULL) {
+        QCalendarWidget::paintCell(painter, rect, date);
+        return;
+    }
+    if (mEventMap->contains(date)) {
+        qDebug() << "have event(s) on " << date;
+    }
 }

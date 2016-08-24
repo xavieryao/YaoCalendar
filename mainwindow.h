@@ -4,8 +4,11 @@
 #include <QMainWindow>
 #include <QFile>
 #include <QFontDatabase>
+#include <QMap>
+#include <QDate>
 #include "mycalendarwidget.h"
 #include "sidebar.h"
+#include "eventmap.h"
 
 namespace Ui {
 class MainWindow;
@@ -26,9 +29,11 @@ private:
     Ui::MainWindow *ui;
     SideBar* mSideBar;
 
+    EventMap* mEventMap;
+
     void setUpCalendarNavigator();
 
-    const int MIN_WIDTH_WITH_SIDEBAR = 600;
+    const int MIN_WIDTH_WITH_SIDEBAR = 500;
     const int SIDE_BAR_WIDTH = 240;
 
 private slots:

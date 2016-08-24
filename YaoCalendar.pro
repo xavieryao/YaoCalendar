@@ -19,7 +19,8 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     mycalendarwidget.h \
-    sidebar.h
+    sidebar.h \
+    eventmap.h
 
 FORMS    += mainwindow.ui
 
