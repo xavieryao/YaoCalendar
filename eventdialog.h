@@ -41,7 +41,7 @@ public:
 signals:
 
 public slots:
-
+    void chooseColor();
 private:
     CalendarEvent mEvent;
 
