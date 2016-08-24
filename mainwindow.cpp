@@ -73,7 +73,7 @@ void MainWindow::setUpCalendarNavigator() {
 
     connect(ui->prevButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showPreviousMonth);
     connect(ui->nextButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showNextMonth);
-    connect(ui->todayButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showToday);
+    connect(ui->todayButton, &QPushButton::clicked, [=]{ui->calendarWidget->showToday(); ui->calendarWidget->setSelectedDate(QDate::currentDate());});
 }
 
 void MainWindow::formatAndSetMonthLabel(int year, int month) {

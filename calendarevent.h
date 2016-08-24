@@ -4,7 +4,11 @@
 #include <QObject>
 #include <QDateTime>
 #include <QColor>
-#include "repeatoptions.h"
+
+enum RepeatMode
+{
+    NONE, PER_DAY_OF_WEEK, PER_DAY, PER_MONTH, PER_YEAR
+};
 
 class CalendarEvent : public QObject
 {
@@ -47,9 +51,5 @@ private:
     RepeatMode mRepeatMode;
 };
 
-enum RepeatMode
-{
-    NONE, PER_DAY_OF_WEEK, PER_DAY, PER_MONTH, PER_YEAR
-};
 
 #endif // CALENDAREVENT_H

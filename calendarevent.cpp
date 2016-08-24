@@ -75,13 +75,3 @@ void CalendarEvent::setDetail(const QString &detail)
 {
     mDetail = detail;
 }
-
-RepeatOptions CalendarEvent::repeatOpt() const
-{
-    return mRepeatOpt;
-}
-
-void CalendarEvent::setRepeatOpt(const RepeatOptions &repeatOpt)
-{
-    mRepeatOpt = repeatOpt;
-}
