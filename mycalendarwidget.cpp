@@ -30,7 +30,9 @@ void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDa
     // Draw cell background
     painter->save();
     QBrush backgroundBrush(Qt::SolidPattern);
-    if (date.dayOfWeek() > Qt::DayOfWeek::Friday) {
+    if (date == this->selectedDate()) {
+        backgroundBrush.setColor(QColor::fromRgb(254,223,194));
+    } else if (date.dayOfWeek() > Qt::DayOfWeek::Friday) {
         backgroundBrush.setColor(QColor::fromRgb(0xf2, 0xf2, 0xf2));
     } else {
         backgroundBrush.setColor(Qt::white);
@@ -53,7 +55,7 @@ void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDa
         QPoint topRightCorner = rect.topRight();
         QPoint topLeftPoint(rect.right() - (rect.right() - rect.left())*0.2,
                             topRightCorner.y());
-        QPoint rightPoint(topRightCorner.x(), rect.top() + (rect.bottom() - rect.top())*0.2);
+        QPoint rightPoint(topRightCorner.x(), rect.top() + (rect.bottom() - rect.top())*0.4);
 
         QPainterPath path;
         path.moveTo(topRightCorner);
@@ -63,6 +65,7 @@ void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDa
         path.lineTo(topRightCorner);
 
         painter->save();
+        painter->setRenderHint(QPainter::Antialiasing);
         painter->setPen(Qt::NoPen);
         painter->fillPath(path, QBrush(QColor::fromRgb(251, 32, 37)));
         painter->restore();
