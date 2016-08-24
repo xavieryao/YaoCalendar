@@ -8,6 +8,10 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QColor>
+#include <QCheckBox>
+#include <QFormLayout>
+#include <QDateEdit>
+#include <QLabel>
 #include "calendarevent.h"
 
 class ColorButton : public QPushButton {
@@ -37,13 +41,13 @@ class EventDialog : public QWidget
     Q_OBJECT
 public:
     explicit EventDialog(QWidget *parent = 0);
-    void setEvent(const CalendarEvent event);
+    void setEvent(CalendarEvent* event);
 signals:
-
+    void eventChanged(CalendarEvent* event);
 public slots:
     void chooseColor();
 private:
-    CalendarEvent mEvent;
+    CalendarEvent* mEvent;
 
     QVBoxLayout* mRootLayout;
     QWidget* mTitleWidget;
@@ -52,6 +56,22 @@ private:
     QLineEdit* mTitleEdit;
     QLineEdit* mLocationEdit;
     QTextEdit* mDescriptionEdit;
+    QDateTimeEdit* mStartDateTime;
+    QDateTimeEdit* mEndDateTime;
+    QCheckBox* mAllDay;
+    QDateEdit* mStartDate;
+    QDateEdit* mEndDate;
+    QFormLayout* mFormLayout;
+    QLabel* mStartLabel;
+    QLabel* mEndLabel;
+
+private slots:
+    void onAllDayChanged(int state);
+    void onStartDateTimeChanged(const QDateTime &datetime);
+    void onEndDateTimeChanged(const QDateTime &datetime);
+    void onStartDateChanged(const QDate &date);
+    void onEndDateChanged(const QDate &date);
+    void onEventChanged(CalendarEvent* event);
 };
 
 

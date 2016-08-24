@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QFont>
 #include <QResizeEvent>
+#include <QTime>
 #include "eventdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -96,7 +97,20 @@ void MainWindow::onDateActivated(const QDate &date) {
     EventDialog* dialog = new EventDialog();
     QList<CalendarEvent> eventList = this->mEventMap->value(date);
     if (!eventList.empty()) {
-        dialog->setEvent(eventList.at(0));
+        CalendarEvent e = eventList.at(0);
+        dialog->setEvent(&e);
+    } else {
+        CalendarEvent* newEvent = new CalendarEvent;
+        QDateTime startTime, endTime;
+        QTime currentTime = QTime::currentTime();
+        currentTime.setHMS(currentTime.hour(), currentTime.minute()-currentTime.minute()%15, 0);
+        startTime.setDate(date);
+        endTime.setDate(date);
+        startTime.setTime(currentTime);
+        endTime.setTime(currentTime.addSecs(60*120));
+        newEvent->setStartTime(startTime);
+        newEvent->setEndTime(endTime);
+        dialog->setEvent(newEvent);
     }
     dialog->show();
 }
