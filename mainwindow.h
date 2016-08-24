@@ -9,6 +9,7 @@
 #include "mycalendarwidget.h"
 #include "sidebar.h"
 #include "eventmap.h"
+#include "calendarevent.h"
 
 namespace Ui {
 class MainWindow;
@@ -38,6 +39,7 @@ private:
 
 private slots:
     void formatAndSetMonthLabel(int year, int month);
+    void onDateActivated(const QDate &date);
 };
 
 #endif // MAINWINDOW_H

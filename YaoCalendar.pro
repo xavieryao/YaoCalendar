@@ -16,13 +16,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     mycalendarwidget.cpp \
     sidebar.cpp \
-    calendarevent.cpp
+    calendarevent.cpp \
+    eventdialog.cpp
 
 HEADERS  += mainwindow.h \
     mycalendarwidget.h \
     sidebar.h \
     eventmap.h \
-    calendarevent.h
+    calendarevent.h \
+    eventdialog.h
 
 FORMS    += mainwindow.ui
 

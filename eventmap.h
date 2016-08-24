@@ -4,8 +4,9 @@
 #include <QMap>
 #include <QDate>
 #include <QList>
+#include "calendarevent.h"
 
-class EventMap : public QMap<QDate, QList<QString> > {
+class EventMap : public QMap<QDate, QList<CalendarEvent> > {
 
 };
 

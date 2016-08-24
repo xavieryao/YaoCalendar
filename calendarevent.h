@@ -10,11 +10,10 @@ enum RepeatMode
     NONE, PER_DAY_OF_WEEK, PER_DAY, PER_MONTH, PER_YEAR
 };
 
-class CalendarEvent : public QObject
+class CalendarEvent
 {
-    Q_OBJECT
 public:
-    explicit CalendarEvent(QObject *parent = 0);
+    explicit CalendarEvent();
     QString eventName() const;
     void setEventName(const QString &eventName);
 

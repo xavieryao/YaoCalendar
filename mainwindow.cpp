@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QFont>
 #include <QResizeEvent>
+#include "eventdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,10 +33,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // DEBUG
     QDate today(2016,8,23);
-    QList<QString> events;
-    events.append("Eat");
-    events.append("Drink");
-    events.append("Litter");
+    QList<CalendarEvent> events;
+    CalendarEvent event1, event2, event3;
+    event1.setEventName("Eat");
+    event2.setEventName("Drink");
+    event3.setEventName("Litter");
+    events.append(event1);
+    events.append(event2);
+    events.append(event3);
 
     mEventMap->insert(today, events);
 
@@ -53,6 +58,8 @@ MainWindow::~MainWindow()
 void MainWindow::setUpCalendarNavigator() {
     connect(ui->calendarWidget, &MyCalendarWidget::currentPageChanged, this,
             &MainWindow::formatAndSetMonthLabel);
+    connect(ui->calendarWidget, &MyCalendarWidget::activated, this,
+            &MainWindow::onDateActivated);
 
     QFile qssFile(":/stylesheet/global");
     qssFile.open(QFile::ReadOnly);
@@ -83,4 +90,13 @@ void MainWindow::formatAndSetMonthLabel(int year, int month) {
 void MainWindow::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
     mSideBar->setVisible(event->size().width() >= MIN_WIDTH_WITH_SIDEBAR);
+}
+
+void MainWindow::onDateActivated(const QDate &date) {
+    EventDialog* dialog = new EventDialog();
+    QList<CalendarEvent> eventList = this->mEventMap->value(date);
+    if (!eventList.empty()) {
+        dialog->setEvent(eventList.at(0));
+    }
+    dialog->show();
 }
