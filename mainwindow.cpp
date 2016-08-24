@@ -47,7 +47,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // END DEBUG
     ui->calendarWidget->setEventMap(mEventMap);
-
 }
 
 MainWindow::~MainWindow()
@@ -100,7 +99,6 @@ void MainWindow::onDateActivated(const QDate &date) {
     QList<CalendarEvent> eventList = this->mEventMap->value(date);
     if (!eventList.empty()) {
         event = eventList.at(0);
-        dialog->setEvent(event);
     } else {
         QDateTime startTime, endTime;
         QTime currentTime = QTime::currentTime();
@@ -111,7 +109,14 @@ void MainWindow::onDateActivated(const QDate &date) {
         endTime.setTime(currentTime.addSecs(60*120));
         event.setStartTime(startTime);
         event.setEndTime(endTime);
-        dialog->setEvent(event);
     }
+    dialog->setEvent(event);
+    connect(dialog, &EventDialog::confirmedEventChange, this, &MainWindow::onEventModified);
     dialog->exec();
+}
+
+void MainWindow::onEventModified(CalendarEvent event) {
+    QList<CalendarEvent> list = mEventMap->value(event.startTime().date());
+    list.append(event);
+    mEventMap->insert(event.startTime().date(), list);
 }
