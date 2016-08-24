@@ -7,7 +7,6 @@
 #include "calendarevent.h"
 
 class EventMap : public QMap<QDate, QList<CalendarEvent> > {
-
 };
 
 #endif // EVENTMAP_H

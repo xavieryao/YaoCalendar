@@ -2,6 +2,7 @@
 #define EVENTDIALOG_H
 
 #include <QWidget>
+#include <QDialog>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QTextEdit>
@@ -36,18 +37,19 @@ private:
     QColor mColor;
 };
 
-class EventDialog : public QWidget
+class EventDialog : public QDialog
 {
     Q_OBJECT
 public:
     explicit EventDialog(QWidget *parent = 0);
-    void setEvent(CalendarEvent* event);
+    void setEvent(CalendarEvent event);
 signals:
-    void eventChanged(CalendarEvent* event);
+    void eventChanged(CalendarEvent& event);
+    void confirmedEventChange(CalendarEvent event);
 public slots:
     void chooseColor();
 private:
-    CalendarEvent* mEvent;
+    CalendarEvent mEvent;
 
     QVBoxLayout* mRootLayout;
     QWidget* mTitleWidget;
@@ -71,7 +73,8 @@ private slots:
     void onEndDateTimeChanged(const QDateTime &datetime);
     void onStartDateChanged(const QDate &date);
     void onEndDateChanged(const QDate &date);
-    void onEventChanged(CalendarEvent* event);
+    void onEventChanged(CalendarEvent& event);
+    void onOkClicked();
 };
 
 

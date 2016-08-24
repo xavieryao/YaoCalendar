@@ -6,9 +6,12 @@
 #include <QColorDialog>
 #include <QDateTimeEdit>
 #include <QLabel>
+#include <QHBoxLayout>
+#include <QPushButton>
 #include <QDebug>
+#include <QSpacerItem>
 
-EventDialog::EventDialog(QWidget *parent) : QWidget(parent)
+EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
 {
     QVBoxLayout* rootLayout = new QVBoxLayout(this);
 
@@ -49,10 +52,21 @@ EventDialog::EventDialog(QWidget *parent) : QWidget(parent)
     mLocationEdit = new QLineEdit(this);
     mDescriptionEdit = new QTextEdit(this);
 
+    QWidget* buttons = new QWidget(this);
+    QHBoxLayout* btnLayout = new QHBoxLayout(buttons);
+    QPushButton* btnOk = new QPushButton(tr("Ok"), this);
+    QPushButton* btnCancel = new QPushButton(tr("Cancel"), this);
+    btnOk->setDefault(true);
+    btnLayout->addStretch();
+    btnLayout->addWidget(btnCancel);
+    btnLayout->addWidget(btnOk);
+    buttons->setLayout(btnLayout);
+
     rootLayout->addWidget(mTitleWidget);
     rootLayout->addWidget(mLocationEdit);
     rootLayout->addWidget(durationWidget);
     rootLayout->addWidget(mDescriptionEdit);
+    rootLayout->addWidget(buttons);
 
     mTitleEdit->setPlaceholderText(tr("New Event"));
     mLocationEdit->setPlaceholderText(tr("Add Location"));
@@ -69,16 +83,19 @@ EventDialog::EventDialog(QWidget *parent) : QWidget(parent)
     connect(mEndDateTime, &QDateTimeEdit::dateTimeChanged, this, &EventDialog::onEndDateTimeChanged);
 
     connect(this, &EventDialog::eventChanged, this, &EventDialog::onEventChanged);
+
+    connect(btnCancel, &QPushButton::clicked, this, &QDialog::reject);
+    connect(btnOk, &QPushButton::clicked, this, &EventDialog::onOkClicked);
 }
 
-void EventDialog::setEvent(CalendarEvent* event) {
+void EventDialog::setEvent(CalendarEvent event) {
     this->mEvent = event;
     emit eventChanged(this->mEvent);
 }
 
 void EventDialog::chooseColor() {
     QColor newColor = QColorDialog::getColor(mColorBtn->color());
-    this->mEvent->setColor(newColor);
+    this->mEvent.setColor(newColor);
     mColorBtn->setColor(newColor);
 }
 
@@ -124,37 +141,41 @@ void EventDialog::onAllDayChanged(int state) {
     }
 }
 
-void EventDialog::onEventChanged(CalendarEvent* event) {
-    mTitleEdit->setText(event->eventName());
-    mLocationEdit->setText(event->location());
-    mDescriptionEdit->setText(event->detail());
-    qDebug() << event->startTime();
-    mStartDateTime->setDateTime(event->startTime());
-    mEndDateTime->setDateTime(event->endTime());
-    mStartDate->setDate(event->startTime().date());
-    mEndDate->setDate(event->endTime().date());
+void EventDialog::onEventChanged(CalendarEvent& event) {
+    mTitleEdit->setText(event.eventName());
+    mLocationEdit->setText(event.location());
+    mDescriptionEdit->setText(event.detail());
+    mStartDateTime->setDateTime(event.startTime());
+    mEndDateTime->setDateTime(event.endTime());
+    mStartDate->setDate(event.startTime().date());
+    mEndDate->setDate(event.endTime().date());
 }
 
 void EventDialog::onStartDateTimeChanged(const QDateTime &datetime) {
-    this->mEvent->setStartTime(datetime);
+    this->mEvent.setStartTime(datetime);
     emit eventChanged(this->mEvent);
 }
 
 void EventDialog::onEndDateTimeChanged(const QDateTime &datetime) {
-    this->mEvent->setEndTime(datetime);
+    this->mEvent.setEndTime(datetime);
     emit eventChanged(this->mEvent);
 }
 
 void EventDialog::onStartDateChanged(const QDate &date) {
-    QDateTime newDateTime = this->mEvent->startTime();
+    QDateTime newDateTime = this->mEvent.startTime();
     newDateTime.setDate(date);
-    this->mEvent->setStartTime(newDateTime);
+    this->mEvent.setStartTime(newDateTime);
     emit eventChanged(this->mEvent);
 }
 
 void EventDialog::onEndDateChanged(const QDate &date) {
-    QDateTime newDateTime = this->mEvent->endTime();
+    QDateTime newDateTime = this->mEvent.endTime();
     newDateTime.setDate(date);
-    this->mEvent->setEndTime(newDateTime);
+    this->mEvent.setEndTime(newDateTime);
     emit eventChanged(this->mEvent);
+}
+
+void EventDialog::onOkClicked() {
+    emit confirmedEventChange(this->mEvent);
+    this->done(QDialog::Accepted);
 }

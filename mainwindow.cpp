@@ -94,13 +94,14 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 }
 
 void MainWindow::onDateActivated(const QDate &date) {
+    CalendarEvent event;
+
     EventDialog* dialog = new EventDialog();
     QList<CalendarEvent> eventList = this->mEventMap->value(date);
     if (!eventList.empty()) {
-        CalendarEvent e = eventList.at(0);
-        dialog->setEvent(&e);
+        event = eventList.at(0);
+        dialog->setEvent(event);
     } else {
-        CalendarEvent* newEvent = new CalendarEvent;
         QDateTime startTime, endTime;
         QTime currentTime = QTime::currentTime();
         currentTime.setHMS(currentTime.hour(), currentTime.minute()-currentTime.minute()%15, 0);
@@ -108,9 +109,9 @@ void MainWindow::onDateActivated(const QDate &date) {
         endTime.setDate(date);
         startTime.setTime(currentTime);
         endTime.setTime(currentTime.addSecs(60*120));
-        newEvent->setStartTime(startTime);
-        newEvent->setEndTime(endTime);
-        dialog->setEvent(newEvent);
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        dialog->setEvent(event);
     }
-    dialog->show();
+    dialog->exec();
 }
