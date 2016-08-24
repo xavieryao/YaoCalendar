@@ -33,7 +33,7 @@ private:
 
     void setUpCalendarNavigator();
 
-    const int MIN_WIDTH_WITH_SIDEBAR = 500;
+    const int MIN_WIDTH_WITH_SIDEBAR = 590;
     const int SIDE_BAR_WIDTH = 240;
 
 private slots:

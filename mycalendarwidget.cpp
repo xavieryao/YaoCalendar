@@ -55,7 +55,7 @@ void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDa
         QPoint topRightCorner = rect.topRight();
         QPoint topLeftPoint(rect.right() - (rect.right() - rect.left())*0.2,
                             topRightCorner.y());
-        QPoint rightPoint(topRightCorner.x(), rect.top() + (rect.bottom() - rect.top())*0.4);
+        QPoint rightPoint(topRightCorner.x(), rect.top() + (rect.right() - rect.left())*0.2);
 
         QPainterPath path;
         path.moveTo(topRightCorner);
