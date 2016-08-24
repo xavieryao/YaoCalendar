@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
         mSideBar->setVisible(false);
     }
 
+    mEventMap = new EventMap();
+
     // DEBUG
     QDate today(2016,8,23);
     QList<QString> events;
@@ -35,9 +37,11 @@ MainWindow::MainWindow(QWidget *parent) :
     events.append("Drink");
     events.append("Litter");
 
-    mEventMap = new EventMap();
     mEventMap->insert(today, events);
+
+    // END DEBUG
     ui->calendarWidget->setEventMap(mEventMap);
+
 }
 
 MainWindow::~MainWindow()
