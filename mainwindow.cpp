@@ -118,6 +118,7 @@ void MainWindow::onDateActivated(const QDate &date) {
 
 void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent event, bool isNew) {
     if (!isNew) {
+        // TODO : get origEvent form eventstorage!
         QList<QDate> expandedOrigDate = origEvent.expandDateFromRepeat();
         for (QDate date: expandedOrigDate) {
             QList<CalendarEvent> list = mEventMap->value(date);
