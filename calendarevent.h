@@ -81,4 +81,7 @@ private:
 
 };
 
+Q_DECLARE_METATYPE(CalendarEvent)
+
+
 #endif // CALENDAREVENT_H

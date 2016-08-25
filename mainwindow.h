@@ -23,6 +23,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+
 protected:
     void resizeEvent(QResizeEvent *event);
 
@@ -43,6 +44,8 @@ private slots:
     void formatAndSetMonthLabel(int year, int month);
     void onDateActivated(const QDate &date);
     void onEventModified(CalendarEvent origEvent, CalendarEvent event, bool isNew);
+    void openEventWindow(CalendarEvent event, bool newEvent = false);
+
 };
 
 #endif // MAINWINDOW_H

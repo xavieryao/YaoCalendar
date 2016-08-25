@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mSideBar->setEventMap(mEventMap);
 
     connect(ui->calendarWidget, &MyCalendarWidget::clicked, mSideBar, &SideBar::updateEventList);
+    connect(mSideBar, &SideBar::editEvent, this, &MainWindow::openEventWindow);
 }
 
 MainWindow::~MainWindow()
@@ -98,30 +99,20 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 }
 
 void MainWindow::onDateActivated(const QDate &date) {
-    CalendarEvent event;
+    // new event
+    CalendarEvent event = CalendarEvent::newInstance();
+    QDateTime startTime, endTime;
+    QTime currentTime = QTime::currentTime();
+    currentTime.setHMS(currentTime.hour(), currentTime.minute()-currentTime.minute()%15, 0);
+    startTime.setDate(date);
+    endTime.setDate(date);
+    startTime.setTime(currentTime);
+    endTime.setTime(currentTime.addSecs(60*120));
+    event.setStartTime(startTime);
+    event.setEndTime(endTime);
 
-    EventDialog* dialog = new EventDialog();
-    QList<CalendarEvent> eventList = this->mEventMap->value(date);
-    if (!eventList.empty()) {
-        qDebug() << "at";
-        event = eventList.at(0);
-        qDebug() << "first" << event.id();
-        dialog->setEvent(event, false);
-    } else {
-        event = CalendarEvent::newInstance();
-        QDateTime startTime, endTime;
-        QTime currentTime = QTime::currentTime();
-        currentTime.setHMS(currentTime.hour(), currentTime.minute()-currentTime.minute()%15, 0);
-        startTime.setDate(date);
-        endTime.setDate(date);
-        startTime.setTime(currentTime);
-        endTime.setTime(currentTime.addSecs(60*120));
-        event.setStartTime(startTime);
-        event.setEndTime(endTime);
-        dialog->setEvent(event);
-    }
-    connect(dialog, &EventDialog::confirmedEventChange, this, &MainWindow::onEventModified);
-    dialog->exec();
+    openEventWindow(event, true);
+
 }
 
 void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent event, bool isNew) {
@@ -142,4 +133,12 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
 
     // TODO Store!
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
+
+}
+
+void MainWindow::openEventWindow(CalendarEvent event, bool newEvent) {
+    EventDialog* dialog = new EventDialog();
+    dialog->setEvent(event, newEvent);
+    connect(dialog, &EventDialog::confirmedEventChange, this, &MainWindow::onEventModified);
+    dialog->exec();
 }

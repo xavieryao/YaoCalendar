@@ -19,6 +19,7 @@ public:
     }
 
 signals:
+    void editEvent(CalendarEvent event, bool isNew = false);
 
 public slots:
     void updateEventList(const QDate &date);
@@ -27,6 +28,9 @@ private:
 
     QTextBrowser* mTextBrowser;
     QListWidget* mList;
+
+private slots:
+    void eventActivated(QListWidgetItem* item);
 };
 
 #endif // SIDEBAR_H

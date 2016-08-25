@@ -14,6 +14,8 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
     rootLayout->addWidget(mList,7);
 
     this->setLayout(rootLayout);
+
+    connect(mList, &QListWidget::itemActivated, this, &SideBar::eventActivated);
 }
 
 void SideBar::updateEventList(const QDate &date) {
@@ -34,6 +36,7 @@ void SideBar::updateEventList(const QDate &date) {
         detailLabel->setText(tr("From:%1<br />To:%2<br />%3")
                            .arg(event.startDateTime().toString())
                            .arg(event.endDateTime().toString(), event.location()));
+        item->setWhatsThis(event.detail());
 
         QVBoxLayout* itemLayout = new QVBoxLayout(itemWidget);
         itemLayout->addWidget(textLabel);
@@ -45,9 +48,14 @@ void SideBar::updateEventList(const QDate &date) {
         itemLayout->addWidget(line);
 
         itemWidget->setLayout(itemLayout);
-//        itemWidget->show();
         item->setSizeHint(QSize(item->sizeHint().width(), itemWidget->sizeHint().height()));
+        item->setData(Qt::UserRole, QVariant::fromValue(event));
         mList->addItem(item);
         mList->setItemWidget(item, itemWidget);
     }
+}
+
+void SideBar::eventActivated(QListWidgetItem *item) {
+    CalendarEvent e = item->data(Qt::UserRole).value<CalendarEvent>();
+    emit editEvent(e);
 }
