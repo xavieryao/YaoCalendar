@@ -8,11 +8,10 @@ CalendarEvent::CalendarEvent()
     this->mColor = QColor::fromRgb(153, 151,244);
 }
 
-CalendarEvent* CalendarEvent::newInstance(CalendarEvent old) {
-    CalendarEvent* newCal = new CalendarEvent(old);
-    newCal->mId = uuid;
+CalendarEvent CalendarEvent::newInstance(CalendarEvent old) {
+    old.mId = uuid;
     uuid++;
-    return newCal;
+    return old;
 }
 
 void CalendarEvent::makeUnique()
@@ -56,6 +55,7 @@ QMap<QDate, QList<CalendarEvent> > CalendarEvent::expandToMap() const
     QMap<QDate, QList<CalendarEvent> > map;
     QDate initDate = this->startDateTime().date();
     CalendarEvent e = *this;
+    qDebug() << "same?" << (&e == this);
     while (initDate <= this->repeatEndDate()) {
         qDebug() << "anotherDay";
         QList<QDate> dateList = e.expandDateFromDuration();

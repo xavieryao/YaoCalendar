@@ -19,7 +19,7 @@ class CalendarEvent
 {
 public:
     explicit CalendarEvent();
-    static CalendarEvent* newInstance(CalendarEvent old = CalendarEvent());
+    static CalendarEvent newInstance(CalendarEvent old = CalendarEvent());
 
     QString eventName() const;
     void setEventName(const QString &eventName);
