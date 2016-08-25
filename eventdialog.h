@@ -67,8 +67,9 @@ public:
     explicit EventDialog(QWidget *parent = 0);
     void setEvent(CalendarEvent event, bool isNew = true);
 signals:
-    void eventChanged(CalendarEvent& event);
+    void eventDateTimeChanged(CalendarEvent& event);
     void confirmedEventChange(CalendarEvent origEvent, CalendarEvent event, bool isNewEvent);
+
 public slots:
 private:
     CalendarEvent mEvent;
@@ -96,6 +97,7 @@ private:
     QWidget* setUpRepeatCombo();
     QWidget* setUpDurationWidget();
     QWidget* setUpButtonWidget();
+    void configureUiFromEvent();
 
 private slots:
     void onAllDayChanged(int state);
@@ -103,7 +105,7 @@ private slots:
     void onEndDateTimeChanged(const QDateTime &datetime);
     void onStartDateChanged(const QDate &date);
     void onEndDateChanged(const QDate &date);
-    void onEventChanged(CalendarEvent& event);
+    void onEventDateTimeChanged(CalendarEvent& event);
     void onOkClicked();
     void chooseColor();
     void onRepeatModeChanged(int index);

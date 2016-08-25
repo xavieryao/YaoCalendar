@@ -53,7 +53,7 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     connect(mEndDate, &QDateTimeEdit::dateChanged, this, &EventDialog::onEndDateChanged);
     connect(mEndDateTime, &QDateTimeEdit::dateTimeChanged, this, &EventDialog::onEndDateTimeChanged);
 
-    connect(this, &EventDialog::eventChanged, this, &EventDialog::onEventChanged);
+    connect(this, &EventDialog::eventDateTimeChanged, this, &EventDialog::onEventDateTimeChanged);
 
 
 }
@@ -121,13 +121,13 @@ void EventDialog::setEvent(CalendarEvent event, bool isNew) {
     this->mEvent = event;
     this->mOrigEvent = event;
     this->mIsNew = isNew;
-    emit eventChanged(this->mEvent);
+    configureUiFromEvent();
 }
 
 void EventDialog::chooseColor() {
     QColor newColor = QColorDialog::getColor(mColorBtn->color());
     this->mEvent.setColor(newColor);
-    emit eventChanged(this->mEvent);
+    mColorBtn->setColor(newColor);
 }
 
 void EventDialog::onAllDayChanged(int state) {
@@ -172,60 +172,71 @@ void EventDialog::onAllDayChanged(int state) {
     }
 }
 
-void EventDialog::onEventChanged(CalendarEvent& event) {
+void EventDialog::configureUiFromEvent() {
     // set text
-    mTitleEdit->setText(event.eventName());
-    mLocationEdit->setText(event.location());
-    mDescriptionEdit->setText(event.detail());
+    mTitleEdit->setText(mEvent.eventName());
+    mLocationEdit->setText(mEvent.location());
+    mDescriptionEdit->setText(mEvent.detail());
 
+    // set duration
+    mStartDateTime->setDateTime(mEvent.startDateTime());
+    mEndDateTime->setDateTime(mEvent.endDateTime());
+    mStartDate->setDate(mEvent.startDateTime().date());
+    mEndDate->setDate(mEvent.endDateTime().date());
+
+    // set repeat
+    mRepeat->setCurrentIndex(mEvent.repeatMode());
+    if (mEvent.repeatMode() == RepeatMode::NONE) {
+        mRepeatWidget->setVisible(false);
+    } else {
+        mRepeatWidget->setVisible(true);
+    }
+    if (mEvent.repeatEndDate() == QDate()) {
+        mEvent.setRepeatEndDate(mEvent.startDateTime().date());
+    }
+    if (mEvent.repeatStartDate() == QDate()) {
+        mEvent.setRepeatStartDate(mEvent.startDateTime().date());
+    }
+    mRepeatWidget->startDateEdit->setDate(mEvent.repeatStartDate());
+    mRepeatWidget->endDateEdit->setDate(mEvent.repeatEndDate());
+
+    // set color
+    mColorBtn->setColor(mEvent.color());
+
+    // set all day
+    mAllDay->setChecked(mEvent.isAllDayEvent());
+}
+
+void EventDialog::onEventDateTimeChanged(CalendarEvent& event) {
     // set duration
     mStartDateTime->setDateTime(event.startDateTime());
     mEndDateTime->setDateTime(event.endDateTime());
     mStartDate->setDate(event.startDateTime().date());
     mEndDate->setDate(event.endDateTime().date());
-
-    // set repeat
-    mRepeat->setCurrentIndex(event.repeatMode());
-    if (event.repeatMode() == RepeatMode::NONE) {
-        mRepeatWidget->setVisible(false);
-    } else {
-        mRepeatWidget->setVisible(true);
-    }
-    if (event.repeatEndDate() == QDate()) {
-        event.setRepeatEndDate(event.startDateTime().date());
-    }
-    if (event.repeatStartDate() == QDate()) {
-        event.setRepeatStartDate(event.startDateTime().date());
-    }
-    mRepeatWidget->startDateEdit->setDate(event.repeatStartDate());
-    mRepeatWidget->endDateEdit->setDate(event.repeatEndDate());
-
-    // set color
-    mColorBtn->setColor(event.color());
 }
 
 void EventDialog::onStartDateTimeChanged(const QDateTime &datetime) {
     this->mEvent.setStartTime(datetime);
-    emit eventChanged(this->mEvent);
+    emit eventDateTimeChanged(this->mEvent);
 }
 
 void EventDialog::onEndDateTimeChanged(const QDateTime &datetime) {
     this->mEvent.setEndTime(datetime);
-    emit eventChanged(this->mEvent);
+    emit eventDateTimeChanged(this->mEvent);
 }
 
 void EventDialog::onStartDateChanged(const QDate &date) {
     QDateTime newDateTime = this->mEvent.startDateTime();
     newDateTime.setDate(date);
     this->mEvent.setStartTime(newDateTime);
-    emit eventChanged(this->mEvent);
+    emit eventDateTimeChanged(this->mEvent);
 }
 
 void EventDialog::onEndDateChanged(const QDate &date) {
     QDateTime newDateTime = this->mEvent.endDateTime();
     newDateTime.setDate(date);
     this->mEvent.setEndTime(newDateTime);
-    emit eventChanged(this->mEvent);
+    emit eventDateTimeChanged(this->mEvent);
 }
 
 void EventDialog::onOkClicked() {
@@ -234,11 +245,18 @@ void EventDialog::onOkClicked() {
     mEvent.setDetail(mDescriptionEdit->toHtml());
     mEvent.setLocation(mLocationEdit->text());
 
+    mEvent.setRepeatStartDate(mRepeatWidget->startDateEdit->date());
+    mEvent.setRepeatEndDate(mRepeatWidget->endDateEdit->date());
+
     emit confirmedEventChange(this->mOrigEvent, this->mEvent, this->mIsNew);
     this->done(QDialog::Accepted);
 }
 
 void EventDialog::onRepeatModeChanged(int index) {
     mEvent.setRepeatMode(RepeatMode(index));
-    emit eventChanged(this->mEvent);
+    if (mEvent.repeatMode() == RepeatMode::NONE) {
+        mRepeatWidget->setVisible(false);
+    } else {
+        mRepeatWidget->setVisible(true);
+    }
 }
