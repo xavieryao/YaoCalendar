@@ -48,11 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     for (auto key: map.keys()) {
         qDebug() << key;
         QList<CalendarEvent> list = mEventMap->value(key);
-        QList<CalendarEvent> ll = map.value(key);
-        for(int i = 0; i < ll.size(); i++) {
-            CalendarEvent e = ll.at(i);
-            list.append(ll.at(i));
-        }
+        list += map.value(key);
         mEventMap->insert(key, list);
     }
     qDebug() << "asdf";
