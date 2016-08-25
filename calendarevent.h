@@ -50,6 +50,12 @@ public:
         return this->id() == right.id();
     }
 
+    QDate repeatStartDate() const;
+    void setRepeatStartDate(const QDate &repeatStartDate);
+
+    QDate repeatEndDate() const;
+    void setRepeatEndDate(const QDate &repeatEndDate);
+
 signals:
 
 public slots:
@@ -59,10 +65,13 @@ private:
     QString mLocation;
     QDateTime mStartDateTime;
     QDateTime mEndDateTime;
+    QDate mRepeatStartDate;
+    QDate mRepeatEndDate;
     QColor mColor;
     bool mIsAllDayEvent;
     QString mDetail;
     RepeatMode mRepeatMode = RepeatMode::NONE;
+
     long long mId;
 
 };
