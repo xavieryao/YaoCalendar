@@ -43,15 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
     event1.setRepeatEndDate(QDate(2016,9,13));
 
     EventMap map = event1.expandToMap();
-    qDebug() << "sadfcasd";
 
-    for (auto key: map.keys()) {
-        qDebug() << key;
-        QList<CalendarEvent> list = mEventMap->value(key);
-        list += map.value(key);
-        mEventMap->insert(key, list);
-    }
-    qDebug() << "asdf";
+    mergeMap(*mEventMap, map);
     // END DEBUG
     ui->calendarWidget->setEventMap(mEventMap);
     mSideBar->setEventMap(mEventMap);
@@ -129,12 +122,7 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
             mEventMap->insert(date, list);
         }
     }
-    QList<QDate> expandedDate = event.expandDateFromRepeat();
-    for (QDate date: expandedDate) {
-        QList<CalendarEvent> list = mEventMap->value(date);
-        list.append(event);
-        mEventMap->insert(date, list);
-    }
+
 
     // TODO Store!
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
@@ -146,4 +134,12 @@ void MainWindow::openEventWindow(CalendarEvent event, bool newEvent) {
     dialog->setEvent(event, newEvent);
     connect(dialog, &EventDialog::confirmedEventChange, this, &MainWindow::onEventModified);
     dialog->exec();
+}
+
+void MainWindow::mergeMap(EventMap &orig, EventMap &newMap) {
+    for (auto key: newMap.keys()) {
+        QList<CalendarEvent> list = orig.value(key);
+        list += newMap.value(key);
+        orig.insert(key, list);
+    }
 }

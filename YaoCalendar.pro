@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     mycalendarwidget.cpp \
     sidebar.cpp \
     calendarevent.cpp \
-    eventdialog.cpp
+    eventdialog.cpp \
+    eventstorage.cpp
 
 HEADERS  += mainwindow.h \
     mycalendarwidget.h \
@@ -25,7 +26,8 @@ HEADERS  += mainwindow.h \
     eventmap.h \
     calendarevent.h \
     eventdialog.h \
-    types.h
+    types.h \
+    eventstorage.h
 
 FORMS    += mainwindow.ui
 
