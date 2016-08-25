@@ -10,6 +10,7 @@
 #include "sidebar.h"
 #include "eventmap.h"
 #include "calendarevent.h"
+#include "eventstorage.h"
 
 namespace Ui {
 class MainWindow;
@@ -32,6 +33,7 @@ private:
     SideBar* mSideBar;
 
     EventMap* mEventMap;
+    EventStorage* mEventStorage;
 
     void setUpCalendarNavigator();
 

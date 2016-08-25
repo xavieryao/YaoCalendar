@@ -17,6 +17,8 @@ public:
     void modifyEvent(CalendarEvent e);
     void removeEvent(CalendarEvent e);
     void createEvent(CalendarEvent e);
+    EventMap* createEventMap();
+    void loadFromFile(QString fileName);
 
 signals:
 

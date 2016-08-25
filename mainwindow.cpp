@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
         mSideBar->setVisible(false);
     }
 
+    mEventStorage = new EventStorage;
+
     mEventMap = new EventMap();
 
     // DEBUG
@@ -60,6 +62,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete mEventMap;
+    delete mEventStorage;
 }
 
 void MainWindow::setUpCalendarNavigator() {
@@ -118,17 +121,19 @@ void MainWindow::onDateActivated(const QDate &date) {
 
 void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent event, bool isNew) {
     if (!isNew) {
-        // TODO : get origEvent form eventstorage!
-        QList<QDate> expandedOrigDate = origEvent.expandDateFromRepeat();
-        for (QDate date: expandedOrigDate) {
-            QList<CalendarEvent> list = mEventMap->value(date);
-            list.removeOne(origEvent);
-            mEventMap->insert(date, list);
+        if (origEvent.repeatMode() != RepeatMode::NONE) {
+
+        } else {
+            EventMap m = origEvent.expandToMap();
+            EventMapHelper::splitMap(*mEventMap, m);
+            mEventStorage->modifyEvent(event);
         }
+
+    } else {
+        mEventStorage->createEvent(event);
     }
     EventMap map = event.expandToMap();
     EventMapHelper::mergeMap(*mEventMap, map);
-    // TODO Store!
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
 
 }
