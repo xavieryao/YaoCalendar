@@ -47,6 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // END DEBUG
     ui->calendarWidget->setEventMap(mEventMap);
+    mSideBar->setEventMap(mEventMap);
+
+    connect(ui->calendarWidget, &MyCalendarWidget::clicked, mSideBar, &SideBar::updateEventList);
 }
 
 MainWindow::~MainWindow()
