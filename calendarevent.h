@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QDateTime>
 #include <QColor>
+#include <QList>
+#include <QDate>
 
 enum RepeatMode
 {
@@ -20,11 +22,11 @@ public:
     QString location() const;
     void setLocation(const QString &location);
 
-    QDateTime startTime() const;
-    void setStartTime(const QDateTime &startTime);
+    QDateTime startDateTime() const;
+    void setStartTime(const QDateTime &startDateTime);
 
-    QDateTime endTime() const;
-    void setEndTime(const QDateTime &endTime);
+    QDateTime endDateTime() const;
+    void setEndTime(const QDateTime &endDateTime);
 
     QColor color() const;
     void setColor(const QColor &color);
@@ -35,6 +37,8 @@ public:
     QString detail() const;
     void setDetail(const QString &detail);
 
+    QList<QDate> expandDateFromRepeat();
+
 signals:
 
 public slots:
@@ -42,8 +46,8 @@ public slots:
 private:
     QString mEventName;
     QString mLocation;
-    QDateTime mStartTime;
-    QDateTime mEndTime;
+    QDateTime mStartDateTime;
+    QDateTime mEndDateTime;
     QColor mColor;
     bool mIsAllDayEvent;
     QString mDetail;

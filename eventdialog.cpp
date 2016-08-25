@@ -145,10 +145,10 @@ void EventDialog::onEventChanged(CalendarEvent& event) {
     mTitleEdit->setText(event.eventName());
     mLocationEdit->setText(event.location());
     mDescriptionEdit->setText(event.detail());
-    mStartDateTime->setDateTime(event.startTime());
-    mEndDateTime->setDateTime(event.endTime());
-    mStartDate->setDate(event.startTime().date());
-    mEndDate->setDate(event.endTime().date());
+    mStartDateTime->setDateTime(event.startDateTime());
+    mEndDateTime->setDateTime(event.endDateTime());
+    mStartDate->setDate(event.startDateTime().date());
+    mEndDate->setDate(event.endDateTime().date());
 }
 
 void EventDialog::onStartDateTimeChanged(const QDateTime &datetime) {
@@ -162,14 +162,14 @@ void EventDialog::onEndDateTimeChanged(const QDateTime &datetime) {
 }
 
 void EventDialog::onStartDateChanged(const QDate &date) {
-    QDateTime newDateTime = this->mEvent.startTime();
+    QDateTime newDateTime = this->mEvent.startDateTime();
     newDateTime.setDate(date);
     this->mEvent.setStartTime(newDateTime);
     emit eventChanged(this->mEvent);
 }
 
 void EventDialog::onEndDateChanged(const QDate &date) {
-    QDateTime newDateTime = this->mEvent.endTime();
+    QDateTime newDateTime = this->mEvent.endDateTime();
     newDateTime.setDate(date);
     this->mEvent.setEndTime(newDateTime);
     emit eventChanged(this->mEvent);

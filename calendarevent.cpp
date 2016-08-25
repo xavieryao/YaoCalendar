@@ -5,6 +5,35 @@ CalendarEvent::CalendarEvent()
 
 }
 
+QList<QDate> CalendarEvent::expandDateFromRepeat()
+{
+    QList<QDate> dateList;
+    QDate initDate = this->startDateTime().date();
+    while (initDate <= this->endDateTime().date()) {
+        dateList.append(initDate);
+        if (mRepeatMode == RepeatMode::NONE) {
+            break;
+        }
+        switch(this->mRepeatMode) {
+        case RepeatMode::PER_DAY_OF_WEEK:
+            initDate = initDate.addDays(7);
+            break;
+        case RepeatMode::PER_DAY:
+            initDate = initDate.addDays(1);
+            break;
+        case RepeatMode::PER_MONTH:
+            initDate = initDate.addMonths(1);
+            break;
+        case RepeatMode::PER_YEAR:
+            initDate = initDate.addYears(1);
+            break;
+        default:
+            break;
+        }
+    }
+    return dateList;
+}
+
 // Auto-generated getter and setter member functions,
 QString CalendarEvent::eventName() const
 {
@@ -26,24 +55,24 @@ void CalendarEvent::setLocation(const QString &location)
     mLocation = location;
 }
 
-QDateTime CalendarEvent::startTime() const
+QDateTime CalendarEvent::startDateTime() const
 {
-    return mStartTime;
+    return mStartDateTime;
 }
 
 void CalendarEvent::setStartTime(const QDateTime &startTime)
 {
-    mStartTime = startTime;
+    mStartDateTime = startTime;
 }
 
-QDateTime CalendarEvent::endTime() const
+QDateTime CalendarEvent::endDateTime() const
 {
-    return mEndTime;
+    return mEndDateTime;
 }
 
 void CalendarEvent::setEndTime(const QDateTime &endTime)
 {
-    mEndTime = endTime;
+    mEndDateTime = endTime;
 }
 
 QColor CalendarEvent::color() const

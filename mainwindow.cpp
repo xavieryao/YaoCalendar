@@ -116,7 +116,7 @@ void MainWindow::onDateActivated(const QDate &date) {
 }
 
 void MainWindow::onEventModified(CalendarEvent event) {
-    QList<CalendarEvent> list = mEventMap->value(event.startTime().date());
+    QList<CalendarEvent> list = mEventMap->value(event.startDateTime().date());
     list.append(event);
-    mEventMap->insert(event.startTime().date(), list);
+    mEventMap->insert(event.startDateTime().date(), list);
 }
