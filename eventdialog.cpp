@@ -107,7 +107,7 @@ QWidget* EventDialog::setUpRepeatCombo() {
     mRepeat = new QComboBox(widget);
     mRepeat->addItem(tr("Don\'t Repeat"), QVariant::fromValue(RepeatMode::NONE));
     mRepeat->addItem(tr("Per Day"), QVariant::fromValue(RepeatMode::PER_DAY));
-    mRepeat->addItem(tr("Per Week"), QVariant::fromValue(RepeatMode::PER_DAY_OF_WEEK));
+    mRepeat->addItem(tr("Per Week"), QVariant::fromValue(RepeatMode::PER_WEEK));
     mRepeat->addItem(tr("Per Month"), QVariant::fromValue(RepeatMode::PER_MONTH));
     mRepeat->addItem(tr("Per Year"), QVariant::fromValue(RepeatMode::PER_YEAR));
     layout->addRow(new QLabel(tr("Repeat:")), mRepeat);
