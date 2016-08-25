@@ -35,19 +35,27 @@ MainWindow::MainWindow(QWidget *parent) :
     // DEBUG
     QDate today(2016,8,23);
     QList<CalendarEvent> events;
-    CalendarEvent event1 = CalendarEvent::newInstance();
-    CalendarEvent event2 = CalendarEvent::newInstance();
-    CalendarEvent event3 = CalendarEvent::newInstance();
+    CalendarEvent event1;
     event1.setEventName("Eat");
-    event2.setEventName("Drink");
-    event3.setEventName("Litter");
-    events.append(event1);
-    events.append(event2);
-    events.append(event3);
+    event1.setStartTime(QDateTime(QDate(2016,8,20), QTime(1,1,1)));
+    event1.setEndTime(QDateTime(QDate(2016,8,21), QTime(5,5,5)));
+    event1.setRepeatMode(RepeatMode::PER_DAY_OF_WEEK);
+    event1.setRepeatEndDate(QDate(2016,9,13));
 
+    EventMap map = event1.expandToMap();
+    qDebug() << "sadfcasd";
 
-    mEventMap->insert(today, events);
-
+    for (auto key: map.keys()) {
+        qDebug() << key;
+        QList<CalendarEvent> list = mEventMap->value(key);
+        QList<CalendarEvent> ll = map.value(key);
+        for(int i = 0; i < ll.size(); i++) {
+            CalendarEvent e = ll.at(i);
+            list.append(ll.at(i));
+        }
+        mEventMap->insert(key, list);
+    }
+    qDebug() << "asdf";
     // END DEBUG
     ui->calendarWidget->setEventMap(mEventMap);
     mSideBar->setEventMap(mEventMap);
@@ -101,7 +109,7 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 
 void MainWindow::onDateActivated(const QDate &date) {
     // new event
-    CalendarEvent event = CalendarEvent::newInstance();
+    CalendarEvent* event = CalendarEvent::newInstance();
     QDateTime startTime, endTime;
     QTime currentTime = QTime::currentTime();
     currentTime.setHMS(currentTime.hour(), currentTime.minute()-currentTime.minute()%15, 0);
@@ -109,10 +117,10 @@ void MainWindow::onDateActivated(const QDate &date) {
     endTime.setDate(date);
     startTime.setTime(currentTime);
     endTime.setTime(currentTime.addSecs(60*120));
-    event.setStartTime(startTime);
-    event.setEndTime(endTime);
+    event->setStartTime(startTime);
+    event->setEndTime(endTime);
 
-    openEventWindow(event, true);
+    openEventWindow(*event, true);
 
 }
 

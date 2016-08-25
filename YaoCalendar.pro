@@ -24,7 +24,8 @@ HEADERS  += mainwindow.h \
     sidebar.h \
     eventmap.h \
     calendarevent.h \
-    eventdialog.h
+    eventdialog.h \
+    types.h
 
 FORMS    += mainwindow.ui
 

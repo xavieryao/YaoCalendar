@@ -194,10 +194,6 @@ void EventDialog::configureUiFromEvent() {
     if (mEvent.repeatEndDate() == QDate()) {
         mEvent.setRepeatEndDate(mEvent.startDateTime().date());
     }
-    if (mEvent.repeatStartDate() == QDate()) {
-        mEvent.setRepeatStartDate(mEvent.startDateTime().date());
-    }
-    mRepeatWidget->startDateEdit->setDate(mEvent.repeatStartDate());
     mRepeatWidget->endDateEdit->setDate(mEvent.repeatEndDate());
 
     // set color
@@ -245,7 +241,6 @@ void EventDialog::onOkClicked() {
     mEvent.setDetail(mDescriptionEdit->toHtml());
     mEvent.setLocation(mLocationEdit->text());
 
-    mEvent.setRepeatStartDate(mRepeatWidget->startDateEdit->date());
     mEvent.setRepeatEndDate(mRepeatWidget->endDateEdit->date());
 
     emit confirmedEventChange(this->mOrigEvent, this->mEvent, this->mIsNew);

@@ -19,7 +19,7 @@ class CalendarEvent
 {
 public:
     explicit CalendarEvent();
-    static CalendarEvent newInstance(CalendarEvent old = CalendarEvent());
+    static CalendarEvent* newInstance(CalendarEvent old = CalendarEvent());
 
     QString eventName() const;
     void setEventName(const QString &eventName);
@@ -55,9 +55,6 @@ public:
         return this->id() == right.id();
     }
 
-    QDate repeatStartDate() const;
-    void setRepeatStartDate(const QDate &repeatStartDate);
-
     QDate repeatEndDate() const;
     void setRepeatEndDate(const QDate &repeatEndDate);
 
@@ -73,7 +70,6 @@ private:
     QString mLocation;
     QDateTime mStartDateTime;
     QDateTime mEndDateTime;
-    QDate mRepeatStartDate;
     QDate mRepeatEndDate;
     QColor mColor;
     bool mIsAllDayEvent;

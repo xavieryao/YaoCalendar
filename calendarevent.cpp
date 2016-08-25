@@ -8,10 +8,11 @@ CalendarEvent::CalendarEvent()
     this->mColor = QColor::fromRgb(153, 151,244);
 }
 
-CalendarEvent CalendarEvent::newInstance(CalendarEvent old) {
-    old.mId = uuid;
+CalendarEvent* CalendarEvent::newInstance(CalendarEvent old) {
+    CalendarEvent* newCal = new CalendarEvent(old);
+    newCal->mId = uuid;
     uuid++;
-    return old;
+    return newCal;
 }
 
 void CalendarEvent::makeUnique()
@@ -25,7 +26,7 @@ QList<QDate> CalendarEvent::expandDateFromRepeat() const
 {
     QList<QDate> dateList;
     QDate initDate = this->startDateTime().date();
-    while (initDate <= this->endDateTime().date()) {
+    while (initDate <= this->repeatEndDate()) {
         dateList.append(initDate);
         switch(this->mRepeatMode) {
         case RepeatMode::NONE:
@@ -51,21 +52,25 @@ QList<QDate> CalendarEvent::expandDateFromRepeat() const
 
 QMap<QDate, QList<CalendarEvent> > CalendarEvent::expandToMap() const
 {
+    qDebug() << "expandToMap";
     QMap<QDate, QList<CalendarEvent> > map;
     QDate initDate = this->startDateTime().date();
     CalendarEvent e = *this;
-    while (initDate <= this->endDateTime().date()) {
+    while (initDate <= this->repeatEndDate()) {
+        qDebug() << "anotherDay";
         QList<QDate> dateList = e.expandDateFromDuration();
         for(QDate date: dateList) {
             QList<CalendarEvent> eList = map.value(date);
             eList.append(e);
-            map.insert(initDate, eList);
+            map.insert(date, eList);
         }
+        if (mRepeatMode == RepeatMode::NONE) {
+            break;
+        }
+
         switch(this->mRepeatMode) {
-        case RepeatMode::NONE:
-            initDate = initDate.addDays(1);
-            e.setEndTime(e.endDateTime().addDays(1));
         case RepeatMode::PER_DAY_OF_WEEK:
+            qDebug() << "increase";
             initDate = initDate.addDays(7);
             e.setEndTime(e.endDateTime().addDays(7));
             break;
@@ -89,16 +94,20 @@ QMap<QDate, QList<CalendarEvent> > CalendarEvent::expandToMap() const
         e.setStartTime(start);
 
     }
+    qDebug() <<"return map";
     return map;
 }
 
 QList<QDate> CalendarEvent::expandDateFromDuration() const {
+    qDebug() << "expand date from duration";
     QList<QDate> dateList;
-    QDate initDate = this->startDateTime().date().addDays(1);
+    QDate initDate = this->startDateTime().date();
     while (initDate <= this->endDateTime().date()) {
+        qDebug() << initDate;
         dateList.append(initDate);
         initDate = initDate.addDays(1);
     }
+    qDebug() << "return";
     return dateList;
 }
 
@@ -106,16 +115,6 @@ QList<QDate> CalendarEvent::expandDateFromDuration() const {
 long long CalendarEvent::id() const
 {
     return mId;
-}
-
-QDate CalendarEvent::repeatStartDate() const
-{
-    return mRepeatStartDate;
-}
-
-void CalendarEvent::setRepeatStartDate(const QDate &repeatStartDate)
-{
-    mRepeatStartDate = repeatStartDate;
 }
 
 QDate CalendarEvent::repeatEndDate() const

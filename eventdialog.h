@@ -45,18 +45,13 @@ class RepeatWidget : public QWidget{
 public:
     explicit RepeatWidget(QWidget* parent = 0) : QWidget(parent) {
         QFormLayout* layout = new QFormLayout(this);
-        startLabel = new QLabel(tr("From:"), this);
         endLabel = new QLabel(tr("Until:"), this);
-        startDateEdit = new QDateEdit(this);
         endDateEdit = new QDateEdit(this);
-        layout->addRow(startLabel, startDateEdit);
         layout->addRow(endLabel, endDateEdit);
         this->setLayout(layout);
     }
 
-    QLabel* startLabel;
     QLabel* endLabel;
-    QDateEdit* startDateEdit;
     QDateEdit* endDateEdit;
 };
 
