@@ -7,6 +7,8 @@
 #include "eventmaphelper.h"
 #include <QMap>
 #include <QList>
+#include <QJsonArray>
+#include <QJsonObject>
 
 class EventStorage : public QObject
 {
@@ -19,6 +21,8 @@ public:
     void createEvent(CalendarEvent e);
     EventMap* createEventMap();
     void loadFromFile(QString fileName);
+    void read(const QJsonObject &json);
+    void write(QJsonObject &json) const;
 
 signals:
 

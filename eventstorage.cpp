@@ -30,6 +30,28 @@ EventMap* EventStorage::createEventMap() {
 }
 
 void EventStorage::loadFromFile(QString fileName) {
-    // DEBUG
 
+}
+
+void EventStorage::read(const QJsonObject &json) {
+    mEventList.clear();
+    QJsonArray arr = json["events"].toArray();
+    for (int i = 0; i < arr.size(); i++) {
+        QJsonObject obj = arr.at(i).toObject();
+        CalendarEvent e;
+        e.read(obj);
+        mEventList.append(e);
+    }
+}
+
+void EventStorage::write(QJsonObject &json) const {
+    json["version"] = "1.0"; // TEMP
+    json["other_meta_info"] = "foobar";
+    QJsonArray eventArr;
+    for (CalendarEvent e: mEventList) {
+        QJsonObject obj;
+        e.write(obj);
+        eventArr.append(obj);
+    }
+    json["events"] = eventArr;
 }
