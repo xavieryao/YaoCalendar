@@ -22,8 +22,6 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     mTitleEdit->setMinimumHeight(25);
 
     mColorBtn = new ColorButton(mTitleWidget);
-    mColorBtn->setColor(QColor::fromRgb(153, 151,244));
-
 
     mTitleLayout->addWidget(mTitleEdit);
     mTitleLayout->addWidget(mColorBtn);
@@ -129,7 +127,7 @@ void EventDialog::setEvent(CalendarEvent event, bool isNew) {
 void EventDialog::chooseColor() {
     QColor newColor = QColorDialog::getColor(mColorBtn->color());
     this->mEvent.setColor(newColor);
-    mColorBtn->setColor(newColor);
+    emit eventChanged(this->mEvent);
 }
 
 void EventDialog::onAllDayChanged(int state) {
@@ -175,19 +173,35 @@ void EventDialog::onAllDayChanged(int state) {
 }
 
 void EventDialog::onEventChanged(CalendarEvent& event) {
+    // set text
     mTitleEdit->setText(event.eventName());
     mLocationEdit->setText(event.location());
     mDescriptionEdit->setText(event.detail());
+
+    // set duration
     mStartDateTime->setDateTime(event.startDateTime());
     mEndDateTime->setDateTime(event.endDateTime());
     mStartDate->setDate(event.startDateTime().date());
     mEndDate->setDate(event.endDateTime().date());
+
+    // set repeat
     mRepeat->setCurrentIndex(event.repeatMode());
     if (event.repeatMode() == RepeatMode::NONE) {
         mRepeatWidget->setVisible(false);
     } else {
         mRepeatWidget->setVisible(true);
     }
+    if (event.repeatEndDate() == QDate()) {
+        event.setRepeatEndDate(event.startDateTime().date());
+    }
+    if (event.repeatStartDate() == QDate()) {
+        event.setRepeatStartDate(event.startDateTime().date());
+    }
+    mRepeatWidget->startDateEdit->setDate(event.repeatStartDate());
+    mRepeatWidget->endDateEdit->setDate(event.repeatEndDate());
+
+    // set color
+    mColorBtn->setColor(event.color());
 }
 
 void EventDialog::onStartDateTimeChanged(const QDateTime &datetime) {

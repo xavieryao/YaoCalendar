@@ -17,12 +17,13 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
 }
 
 void SideBar::updateEventList(const QDate &date) {
+    mList->clear();
     QList<CalendarEvent> eventList = mEventMap->value(date);
     if (eventList.empty()) {
         return;
     }
-    mList->clear();
-    for (CalendarEvent event: eventList) {
+    for (int i = 0; i < eventList.size(); i++) {
+        CalendarEvent event = eventList.at(i);
         QListWidgetItem* item = new QListWidgetItem();
         QWidget *itemWidget = new QWidget(this);
         QLabel* textLabel = new QLabel(itemWidget);

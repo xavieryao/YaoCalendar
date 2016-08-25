@@ -5,6 +5,7 @@ long long CalendarEvent::uuid = 0l;
 
 CalendarEvent::CalendarEvent()
 {
+    this->mColor = QColor::fromRgb(153, 151,244);
 }
 
 CalendarEvent CalendarEvent::newInstance(CalendarEvent old) {
