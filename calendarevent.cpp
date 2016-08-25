@@ -51,13 +51,10 @@ QList<QDate> CalendarEvent::expandDateFromRepeat() const
 
 QMap<QDate, QList<CalendarEvent> > CalendarEvent::expandToMap() const
 {
-    qDebug() << "expandToMap" << mRepeatMode;
     QMap<QDate, QList<CalendarEvent> > map;
     QDate initDate = this->startDateTime().date();
     CalendarEvent e = *this;
-    qDebug() << "same?" << (&e == this);
     while (initDate <= this->repeatEndDate()) {
-        qDebug() << "anotherDay";
         QList<QDate> dateList = e.expandDateFromDuration();
         for(QDate date: dateList) {
             QList<CalendarEvent> eList = map.value(date);
@@ -70,7 +67,6 @@ QMap<QDate, QList<CalendarEvent> > CalendarEvent::expandToMap() const
 
         switch(this->mRepeatMode) {
         case RepeatMode::PER_WEEK:
-            qDebug() << "increase";
             initDate = initDate.addDays(7);
             e.setEndTime(e.endDateTime().addDays(7));
             break;
@@ -94,20 +90,16 @@ QMap<QDate, QList<CalendarEvent> > CalendarEvent::expandToMap() const
         e.setStartTime(start);
 
     }
-    qDebug() <<"return map";
     return map;
 }
 
 QList<QDate> CalendarEvent::expandDateFromDuration() const {
-    qDebug() << "expand date from duration";
     QList<QDate> dateList;
     QDate initDate = this->startDateTime().date();
     while (initDate <= this->endDateTime().date()) {
-        qDebug() << initDate;
         dateList.append(initDate);
         initDate = initDate.addDays(1);
     }
-    qDebug() << "return";
     return dateList;
 }
 
