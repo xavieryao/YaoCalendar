@@ -7,9 +7,6 @@ EventStorage::EventStorage(QObject *parent) : QObject(parent)
 }
 
 CalendarEvent EventStorage::findPrimaryEvent(CalendarEvent e) const {
-    qDebug() << "find primary";
-    qDebug() << mEventList.indexOf(e);
-    qDebug() << mEventList.at(mEventList.indexOf(e)).startDateTime();
     return mEventList.at(mEventList.indexOf(e));
 }
 
@@ -26,11 +23,31 @@ void EventStorage::createEvent(CalendarEvent e) {
 }
 
 EventMap* EventStorage::createEventMap() {
-
+    // Not implemented
 }
 
-void EventStorage::loadFromFile(QString fileName) {
+void EventStorage::loadFromFile(QFile& saveFile) {
+    if (!saveFile.open(QIODevice::ReadOnly)) {
+        qWarning("Couldn't open save file.");
+        return;
+    }
 
+    QByteArray saveData = saveFile.readAll();
+
+    QJsonDocument loadDoc = QJsonDocument::fromJson(saveData);
+    read(loadDoc.object());
+}
+
+void EventStorage::saveToFile(QFile& saveFile) {
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning("Couldn't open save file.");
+        return;
+    }
+    QJsonObject saveObj;
+    write(saveObj);
+    QJsonDocument saveDoc(saveObj);
+    saveFile.write(saveDoc.toJson());
+    saveFile.close();
 }
 
 void EventStorage::read(const QJsonObject &json) {
@@ -38,7 +55,7 @@ void EventStorage::read(const QJsonObject &json) {
     QJsonArray arr = json["events"].toArray();
     for (int i = 0; i < arr.size(); i++) {
         QJsonObject obj = arr.at(i).toObject();
-        CalendarEvent e;
+        CalendarEvent e = CalendarEvent::newInstance();
         e.read(obj);
         mEventList.append(e);
     }

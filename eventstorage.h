@@ -9,6 +9,8 @@
 #include <QList>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QJsonDocument>
+#include <QFile>
 
 class EventStorage : public QObject
 {
@@ -20,7 +22,8 @@ public:
     void removeEvent(CalendarEvent e);
     void createEvent(CalendarEvent e);
     EventMap* createEventMap();
-    void loadFromFile(QString fileName);
+    void loadFromFile(QFile& file);
+    void saveToFile(QFile& file);
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 

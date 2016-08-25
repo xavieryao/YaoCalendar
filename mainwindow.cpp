@@ -5,8 +5,11 @@
 #include <QFont>
 #include <QResizeEvent>
 #include <QTime>
+#include <QFile>
 #include <QMessageBox>
 #include <QAbstractButton>
+#include <QDir>
+#include <QJsonDocument>
 #include "eventdialog.h"
 #include "eventmaphelper.h"
 
@@ -34,7 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     mEventStorage = new EventStorage;
-
     mEventMap = new EventMap();
 
     // DEBUG
@@ -58,6 +60,22 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->calendarWidget, &MyCalendarWidget::clicked, mSideBar, &SideBar::updateEventList);
     connect(mSideBar, &SideBar::editEvent, this, &MainWindow::openEventWindow);
+
+    // DEBUG
+    QPushButton* btnToJson = new QPushButton("Save File");
+    connect(btnToJson, &QPushButton::clicked, [=]{
+        QFile file(QDir::homePath() + "/yaoCalSave/save.json");
+        qDebug() << QDir::homePath() + "/yaoCalSave/save.json";
+        mEventStorage->saveToFile(file);
+    });
+    QPushButton* btnLoad = new QPushButton("Load File");
+    connect(btnToJson, &QPushButton::clicked, [=]{
+        QFile file(QDir::homePath() + "/yaoCalSave/save.json");
+
+        mEventStorage->loadFromFile(file);
+    });
+    ui->centralHorizontalLayout->addWidget(btnToJson);
+    ui->centralHorizontalLayout->addWidget(btnLoad);
 }
 
 MainWindow::~MainWindow()
