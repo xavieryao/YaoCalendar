@@ -19,6 +19,26 @@ void CalendarEvent::makeUnique()
     uuid++;
 }
 
+QDate CalendarEvent::repeatStartDate() const
+{
+    return mRepeatStartDate;
+}
+
+void CalendarEvent::setRepeatStartDate(const QDate &repeatStartDate)
+{
+    mRepeatStartDate = repeatStartDate;
+}
+
+QDate CalendarEvent::repeatEndDate() const
+{
+    return mRepeatEndDate;
+}
+
+void CalendarEvent::setRepeatEndDate(const QDate &repeatEndDate)
+{
+    mRepeatEndDate = repeatEndDate;
+}
+
 QList<QDate> CalendarEvent::expandDateFromRepeat() const
 {
     QList<QDate> dateList;

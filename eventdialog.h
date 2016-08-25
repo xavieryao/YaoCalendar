@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QDialog>
+#include <QObject>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QTextEdit>
@@ -13,6 +14,7 @@
 #include <QFormLayout>
 #include <QDateEdit>
 #include <QComboBox>
+#include <QTimeEdit>
 #include <QLabel>
 #include "calendarevent.h"
 
@@ -36,6 +38,26 @@ public:
     }
 private:
     QColor mColor;
+};
+
+class RepeatWidget : QWidget{
+    Q_OBJECT
+public:
+    explicit RepeatWidget(QWidget* parent = 0) : QWidget(parent) {
+        QFormLayout* layout = new QFormLayout(this);
+        startLabel = new QLabel(tr("From:"), this);
+        endLabel = new QLabel(tr("Until:"), this);
+        startDateEdit = new QDateEdit(this);
+        endDateEdit = new QDateEdit(this);
+        layout->addRow(startLabel, startDateEdit);
+        layout->addRow(endLabel, endDateEdit);
+        this->setVisible(false);
+    }
+
+    QLabel* startLabel;
+    QLabel* endLabel;
+    QDateEdit* startDateEdit;
+    QDateEdit* endDateEdit;
 };
 
 class EventDialog : public QDialog
@@ -65,10 +87,17 @@ private:
     QCheckBox* mAllDay;
     QDateEdit* mStartDate;
     QDateEdit* mEndDate;
+    QTimeEdit* mStartTime;
+    QTimeEdit* mEndTime;
     QFormLayout* mFormLayout;
     QLabel* mStartLabel;
     QLabel* mEndLabel;
     QComboBox* mRepeat;
+    RepeatWidget* mRepeatWidget;
+
+    QWidget* setUpRepeatCombo();
+    QWidget* setUpDurationWidget();
+    QWidget* setUpButtonWidget();
 
 private slots:
     void onAllDayChanged(int state);

@@ -24,35 +24,6 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     mColorBtn = new ColorButton(mTitleWidget);
     mColorBtn->setColor(QColor::fromRgb(153, 151,244));
 
-    QWidget* durationWidget = new QWidget(this);
-
-    mStartLabel = new QLabel(tr("Start:"), durationWidget);
-    mEndLabel = new QLabel(tr("End:"), durationWidget);
-
-    mFormLayout = new QFormLayout(durationWidget);
-    mStartDateTime = new QDateTimeEdit(durationWidget);
-    mEndDateTime = new QDateTimeEdit(durationWidget);
-    mStartDate = new QDateEdit(durationWidget);
-    mEndDate = new QDateEdit(durationWidget);
-    mStartDate->setVisible(false);
-    mEndDate->setVisible(false);
-
-    mAllDay = new QCheckBox(durationWidget);
-    mAllDay->setChecked(false);
-
-    mRepeat = new QComboBox(durationWidget);
-    mRepeat->addItem(tr("Don\'t Repeat"), RepeatMode::NONE);
-    mRepeat->addItem(tr("Per Day"), RepeatMode::PER_DAY);
-    mRepeat->addItem(tr("Per Week"), RepeatMode::PER_DAY_OF_WEEK);
-    mRepeat->addItem(tr("Per Month"), RepeatMode::PER_MONTH);
-    mRepeat->addItem(tr("Per Year"), RepeatMode::PER_YEAR);
-
-    mFormLayout->addRow(new QLabel(tr("All Day:"), durationWidget), mAllDay);
-    mFormLayout->addRow(new QLabel(tr("Repeat:")), mRepeat);
-    mFormLayout->addRow(mStartLabel, mStartDateTime);
-    mFormLayout->addRow(mEndLabel, mEndDateTime);
-
-    durationWidget->setLayout(mFormLayout);
 
     mTitleLayout->addWidget(mTitleEdit);
     mTitleLayout->addWidget(mColorBtn);
@@ -60,25 +31,16 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     mLocationEdit = new QLineEdit(this);
     mDescriptionEdit = new QTextEdit(this);
 
-    QWidget* buttons = new QWidget(this);
-    QHBoxLayout* btnLayout = new QHBoxLayout(buttons);
-    QPushButton* btnOk = new QPushButton(tr("Ok"), this);
-    QPushButton* btnCancel = new QPushButton(tr("Cancel"), this);
-    btnOk->setDefault(true);
-    btnLayout->addStretch();
-    btnLayout->addWidget(btnCancel);
-    btnLayout->addWidget(btnOk);
-    buttons->setLayout(btnLayout);
-
-    rootLayout->addWidget(mTitleWidget);
-    rootLayout->addWidget(mLocationEdit);
-    rootLayout->addWidget(durationWidget);
-    rootLayout->addWidget(mDescriptionEdit);
-    rootLayout->addWidget(buttons);
-
     mTitleEdit->setPlaceholderText(tr("New Event"));
     mLocationEdit->setPlaceholderText(tr("Add Location"));
     mDescriptionEdit->setPlaceholderText(tr("Add note, URL or file."));
+
+    rootLayout->addWidget(mTitleWidget);
+    rootLayout->addWidget(mLocationEdit);
+    rootLayout->addWidget(setUpDurationWidget());
+    rootLayout->addWidget(setUpRepeatCombo());
+    rootLayout->addWidget(mDescriptionEdit);
+    rootLayout->addWidget(setUpButtonWidget());
 
     connect(mColorBtn, &ColorButton::clicked, this, &EventDialog::chooseColor);
     connect(this->mAllDay, &QCheckBox::stateChanged, this, &EventDialog::onAllDayChanged);
@@ -92,8 +54,67 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
 
     connect(this, &EventDialog::eventChanged, this, &EventDialog::onEventChanged);
 
+
+}
+
+QWidget* EventDialog::setUpDurationWidget() {
+    QWidget* durationWidget = new QWidget(this);
+
+    mStartLabel = new QLabel(tr("Start:"), durationWidget);
+    mEndLabel = new QLabel(tr("End:"), durationWidget);
+
+    mFormLayout = new QFormLayout(durationWidget);
+    mStartDateTime = new QDateTimeEdit(durationWidget);
+    mEndDateTime = new QDateTimeEdit(durationWidget);
+    mStartDate = new QDateEdit(durationWidget);
+    mEndDate = new QDateEdit(durationWidget);
+    mStartTime = new QTimeEdit(durationWidget);
+    mEndTime = new QTimeEdit(durationWidget);
+    mStartDate->setVisible(false);
+    mEndDate->setVisible(false);
+    mStartTime->setVisible(false);
+    mEndTime->setVisible(false);
+
+    mAllDay = new QCheckBox(durationWidget);
+    mAllDay->setChecked(false);
+
+    mFormLayout->addRow(new QLabel(tr("All Day:"), durationWidget), mAllDay);
+    mFormLayout->addRow(mStartLabel, mStartDateTime);
+    mFormLayout->addRow(mEndLabel, mEndDateTime);
+
+    durationWidget->setLayout(mFormLayout);
+    return durationWidget;
+}
+
+QWidget* EventDialog::setUpButtonWidget() {
+    QWidget* buttons = new QWidget(this);
+    QHBoxLayout* btnLayout = new QHBoxLayout(buttons);
+    QPushButton* btnOk = new QPushButton(tr("Ok"), this);
+    QPushButton* btnCancel = new QPushButton(tr("Cancel"), this);
+    btnOk->setDefault(true);
+    btnLayout->addStretch();
+    btnLayout->addWidget(btnCancel);
+    btnLayout->addWidget(btnOk);
+    buttons->setLayout(btnLayout);
+
     connect(btnCancel, &QPushButton::clicked, this, &QDialog::reject);
     connect(btnOk, &QPushButton::clicked, this, &EventDialog::onOkClicked);
+
+    return buttons;
+}
+
+QWidget* EventDialog::setUpRepeatCombo() {
+    QWidget* widget = new QWidget(this);
+    QFormLayout* layout = new QFormLayout(widget);
+    widget->setLayout(layout);
+    mRepeat = new QComboBox(widget);
+    mRepeat->addItem(tr("Don\'t Repeat"), RepeatMode::NONE);
+    mRepeat->addItem(tr("Per Day"), RepeatMode::PER_DAY);
+    mRepeat->addItem(tr("Per Week"), RepeatMode::PER_DAY_OF_WEEK);
+    mRepeat->addItem(tr("Per Month"), RepeatMode::PER_MONTH);
+    mRepeat->addItem(tr("Per Year"), RepeatMode::PER_YEAR);
+    layout->addRow(new QLabel(tr("Repeat:")), mRepeat);
+    return widget;
 }
 
 void EventDialog::setEvent(CalendarEvent event, bool isNew) {
