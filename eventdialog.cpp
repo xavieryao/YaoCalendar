@@ -154,15 +154,11 @@ void EventDialog::onEventChanged(CalendarEvent& event) {
 }
 
 void EventDialog::onStartDateTimeChanged(const QDateTime &datetime) {
-    this->mEndDate->setMaximumDateTime(datetime);
-    this->mEndDateTime->setMaximumDateTime(datetime);
     this->mEvent.setStartTime(datetime);
     emit eventChanged(this->mEvent);
 }
 
 void EventDialog::onEndDateTimeChanged(const QDateTime &datetime) {
-    this->mStartDate->setMaximumDateTime(datetime);
-    this->mStartDateTime->setMaximumDateTime(datetime);
     this->mEvent.setEndTime(datetime);
     emit eventChanged(this->mEvent);
 }
@@ -170,8 +166,6 @@ void EventDialog::onEndDateTimeChanged(const QDateTime &datetime) {
 void EventDialog::onStartDateChanged(const QDate &date) {
     QDateTime newDateTime = this->mEvent.startDateTime();
     newDateTime.setDate(date);
-    this->mEndDate->setMinimumDateTime(newDateTime);
-    this->mEndDateTime->setMinimumDateTime(newDateTime);
     this->mEvent.setStartTime(newDateTime);
     emit eventChanged(this->mEvent);
 }
@@ -179,15 +173,11 @@ void EventDialog::onStartDateChanged(const QDate &date) {
 void EventDialog::onEndDateChanged(const QDate &date) {
     QDateTime newDateTime = this->mEvent.endDateTime();
     newDateTime.setDate(date);
-    this->mStartDate->setMaximumDate(date);
-    this->mStartDateTime->setMaximumDateTime(newDateTime);
     this->mEvent.setEndTime(newDateTime);
     emit eventChanged(this->mEvent);
 }
 
 void EventDialog::onOkClicked() {
-
-
     emit confirmedEventChange(this->mOrigEvent, this->mEvent, this->mIsNew);
     this->done(QDialog::Accepted);
 }
