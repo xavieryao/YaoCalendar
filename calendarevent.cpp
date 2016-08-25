@@ -103,6 +103,30 @@ QList<QDate> CalendarEvent::expandDateFromDuration() const {
     return dateList;
 }
 
+void CalendarEvent::write(QJsonObject &json) const {
+    json["name"] = mEventName;
+    json["location"] = mLocation;
+    json["detail"] = mDetail;
+    json["color"] = mColor.name();
+    json["startDateTime"] = startDateTime().toString(Qt::ISODate);
+    json["endDateTime"] = endDateTime().toString(Qt::ISODate);
+    json["repeatMode"] = (int) mRepeatMode;
+    json["repeatEndDate"] = repeatEndDate().toString(Qt::ISODate);
+    json["isAllDay"] = mIsAllDayEvent;
+}
+
+void CalendarEvent::read(const QJsonObject &json) {
+    mEventName = json["name"].toString();
+    mLocation = json["location"].toString();
+    mDetail = json["detail"].toString();
+    mColor = QColor(json["color"].toString());
+    mStartDateTime = QDateTime::fromString(json["startDateTime"].toString(), Qt::ISODate);
+    mEndDateTime = QDateTime::fromString(json["endDateTime"].toString(), Qt::ISODate);
+    mRepeatMode = RepeatMode(json["repeatMode"].toInt());
+    mRepeatEndDate = QDate::fromString(json["repeatEndDate"].toString(), Qt::ISODate);
+    mIsAllDayEvent = json["isAllDay"].toBool();
+}
+
 // Auto-generated getter and setter member functions,
 long long CalendarEvent::id() const
 {

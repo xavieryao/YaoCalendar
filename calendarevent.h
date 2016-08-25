@@ -6,6 +6,8 @@
 #include <QColor>
 #include <QList>
 #include <QDate>
+#include <QJsonArray>
+#include <QJsonObject>
 #include <QMap>
 
 enum RepeatMode
@@ -61,19 +63,22 @@ public:
     RepeatMode repeatMode() const;
     void setRepeatMode(const RepeatMode &repeatMode);
 
+    void read(const QJsonObject &json);
+    void write(QJsonObject &json) const;
+
 signals:
 
 public slots:
 
 private:
-    QString mEventName;
-    QString mLocation;
-    QDateTime mStartDateTime;
-    QDateTime mEndDateTime;
-    QDate mRepeatEndDate;
+    QString mEventName = QString();
+    QString mLocation = QString();
+    QDateTime mStartDateTime = QDateTime();
+    QDateTime mEndDateTime = QDateTime();
+    QDate mRepeatEndDate = QDate();
     QColor mColor;
-    bool mIsAllDayEvent;
-    QString mDetail;
+    bool mIsAllDayEvent = false;
+    QString mDetail = QString();
     RepeatMode mRepeatMode = RepeatMode::NONE;
 
     long long mId;
