@@ -16,7 +16,9 @@ void EventMapHelper::mergeMap(EventMap &orig, EventMap &newMap) {
 void EventMapHelper::splitMap(EventMap &orig, EventMap &newMap) {
     for (auto key: newMap.keys()) {
         QList<CalendarEvent> list = orig.value(key);
-        list -= newMap.value(key);
+        for (CalendarEvent e : newMap.value(key)) {
+            list.removeOne(e);
+        }
         orig.insert(key, list);
     }
 }
