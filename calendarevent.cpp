@@ -1,11 +1,14 @@
 #include "calendarevent.h"
 
+long CalendarEvent::uuid = 0l;
+
 CalendarEvent::CalendarEvent()
 {
-
+    this->mId = uuid;
+    uuid++;
 }
 
-QList<QDate> CalendarEvent::expandDateFromRepeat()
+QList<QDate> CalendarEvent::expandDateFromRepeat() const
 {
     QList<QDate> dateList;
     QDate initDate = this->startDateTime().date();
@@ -32,6 +35,11 @@ QList<QDate> CalendarEvent::expandDateFromRepeat()
         }
     }
     return dateList;
+}
+
+int CalendarEvent::id() const
+{
+    return mId;
 }
 
 // Auto-generated getter and setter member functions,

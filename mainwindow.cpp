@@ -118,11 +118,22 @@ void MainWindow::onDateActivated(const QDate &date) {
     dialog->exec();
 }
 
-void MainWindow::onEventModified(CalendarEvent event) {
-    QList<QDate> expendedDate = event.expandDateFromRepeat();
-    for (QDate date: expendedDate) {
+void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent event, bool isNew) {
+    if (!isNew) {
+        QList<QDate> expandedOrigDate = origEvent.expandDateFromRepeat();
+        for (QDate date: expandedOrigDate) {
+            QList<CalendarEvent> list = mEventMap->value(date);
+            list.removeOne(origEvent);
+            mEventMap->insert(date, list);
+        }
+    }
+    QList<QDate> expandedDate = event.expandDateFromRepeat();
+    for (QDate date: expandedDate) {
         QList<CalendarEvent> list = mEventMap->value(date);
         list.append(event);
         mEventMap->insert(date, list);
     }
+
+    // TODO Store!
+    // TODO Reload!!
 }

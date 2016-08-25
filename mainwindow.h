@@ -42,7 +42,7 @@ public slots:
 private slots:
     void formatAndSetMonthLabel(int year, int month);
     void onDateActivated(const QDate &date);
-    void onEventModified(CalendarEvent event);
+    void onEventModified(CalendarEvent origEvent, CalendarEvent event, bool isNew);
 };
 
 #endif // MAINWINDOW_H

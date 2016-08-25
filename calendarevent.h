@@ -37,7 +37,16 @@ public:
     QString detail() const;
     void setDetail(const QString &detail);
 
-    QList<QDate> expandDateFromRepeat();
+    QList<QDate> expandDateFromRepeat() const;
+
+    int id() const;
+
+//    static long long uuid;
+    static long uuid;
+
+    bool operator==(const CalendarEvent& right) {
+        return this->id() == right.id();
+    }
 
 signals:
 
@@ -52,7 +61,8 @@ private:
     bool mIsAllDayEvent;
     QString mDetail;
     RepeatMode mRepeatMode;
-};
+    int mId;
 
+};
 
 #endif // CALENDAREVENT_H

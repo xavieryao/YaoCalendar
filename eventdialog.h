@@ -42,13 +42,15 @@ class EventDialog : public QDialog
     Q_OBJECT
 public:
     explicit EventDialog(QWidget *parent = 0);
-    void setEvent(CalendarEvent event);
+    void setEvent(CalendarEvent event, bool isNew = true);
 signals:
     void eventChanged(CalendarEvent& event);
-    void confirmedEventChange(CalendarEvent event);
+    void confirmedEventChange(CalendarEvent origEvent, CalendarEvent event, bool isNewEvent);
 public slots:
 private:
     CalendarEvent mEvent;
+    CalendarEvent mOrigEvent;
+    bool mIsNew;
 
     QVBoxLayout* mRootLayout;
     QWidget* mTitleWidget;

@@ -88,8 +88,10 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     connect(btnOk, &QPushButton::clicked, this, &EventDialog::onOkClicked);
 }
 
-void EventDialog::setEvent(CalendarEvent event) {
+void EventDialog::setEvent(CalendarEvent event, bool isNew) {
     this->mEvent = event;
+    this->mOrigEvent = event;
+    this->mIsNew = isNew;
     emit eventChanged(this->mEvent);
 }
 
@@ -176,6 +178,6 @@ void EventDialog::onEndDateChanged(const QDate &date) {
 }
 
 void EventDialog::onOkClicked() {
-    emit confirmedEventChange(this->mEvent);
+    emit confirmedEventChange(this->mOrigEvent, this->mEvent, this->mIsNew);
     this->done(QDialog::Accepted);
 }
