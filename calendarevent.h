@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QList>
 #include <QDate>
+#include <QMap>
 
 enum RepeatMode
 {
@@ -42,6 +43,8 @@ public:
     void setDetail(const QString &detail);
 
     QList<QDate> expandDateFromRepeat() const;
+    QList<QDate> expandDateFromDuration() const;
+    QMap<QDate, QList<CalendarEvent> > expandToMap() const;
 
     long long id() const;
     void makeUnique();

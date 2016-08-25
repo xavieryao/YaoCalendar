@@ -45,6 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     events.append(event2);
     events.append(event3);
 
+
     mEventMap->insert(today, events);
 
     // END DEBUG
