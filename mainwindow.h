@@ -34,7 +34,6 @@ private:
     EventMap* mEventMap;
 
     void setUpCalendarNavigator();
-    void mergeMap(EventMap& orig, EventMap& newMap);
 
     static const int MIN_WIDTH_WITH_SIDEBAR = 590;
     static const int SIDE_BAR_WIDTH = 240;

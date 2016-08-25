@@ -6,6 +6,7 @@
 #include <QResizeEvent>
 #include <QTime>
 #include "eventdialog.h"
+#include "eventmaphelper.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -125,7 +126,7 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
         }
     }
     EventMap map = event.expandToMap();
-    mergeMap(*mEventMap, map);
+    EventMapHelper::mergeMap(*mEventMap, map);
     // TODO Store!
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
 
@@ -136,12 +137,4 @@ void MainWindow::openEventWindow(CalendarEvent event, bool newEvent) {
     dialog->setEvent(event, newEvent);
     connect(dialog, &EventDialog::confirmedEventChange, this, &MainWindow::onEventModified);
     dialog->exec();
-}
-
-void MainWindow::mergeMap(EventMap &orig, EventMap &newMap) {
-    for (auto key: newMap.keys()) {
-        QList<CalendarEvent> list = orig.value(key);
-        list += newMap.value(key);
-        orig.insert(key, list);
-    }
 }
