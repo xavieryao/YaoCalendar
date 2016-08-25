@@ -18,6 +18,9 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
 
 void SideBar::updateEventList(const QDate &date) {
     QList<CalendarEvent> eventList = mEventMap->value(date);
+    if (eventList.empty()) {
+        return;
+    }
     mList->clear();
     for (CalendarEvent event: eventList) {
         QListWidgetItem* item = new QListWidgetItem();

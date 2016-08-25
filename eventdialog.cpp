@@ -88,7 +88,7 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     connect(btnOk, &QPushButton::clicked, this, &EventDialog::onOkClicked);
 }
 
-void EventDialog::setEvent(CalendarEvent event, bool isNew) {
+void EventDialog::setEvent(CalendarEvent event) {
     this->mEvent = event;
     this->mOrigEvent = event;
     this->mIsNew = isNew;
@@ -178,6 +178,11 @@ void EventDialog::onEndDateChanged(const QDate &date) {
 }
 
 void EventDialog::onOkClicked() {
+    mEvent.setIsAllDayEvent(mAllDay->checkState() == Qt::Checked);
+    mEvent.setEventName(mTitleEdit->text());
+    mEvent.setDetail(mDescriptionEdit->toHtml());
+    mEvent.setLocation(mLocationEdit->text());
+
     emit confirmedEventChange(this->mOrigEvent, this->mEvent, this->mIsNew);
     this->done(QDialog::Accepted);
 }

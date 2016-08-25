@@ -16,6 +16,8 @@ class CalendarEvent
 {
 public:
     explicit CalendarEvent();
+    static CalendarEvent newInstance(CalendarEvent old = CalendarEvent());
+
     QString eventName() const;
     void setEventName(const QString &eventName);
 
@@ -39,10 +41,10 @@ public:
 
     QList<QDate> expandDateFromRepeat() const;
 
-    int id() const;
+    long long id() const;
+    void makeUnique();
 
-//    static long long uuid;
-    static long uuid;
+    static long long uuid;
 
     bool operator==(const CalendarEvent& right) {
         return this->id() == right.id();
@@ -60,8 +62,8 @@ private:
     QColor mColor;
     bool mIsAllDayEvent;
     QString mDetail;
-    RepeatMode mRepeatMode;
-    int mId;
+    RepeatMode mRepeatMode = RepeatMode::NONE;
+    long long mId;
 
 };
 

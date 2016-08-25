@@ -1,15 +1,21 @@
 #include "calendarevent.h"
 #include <QDebug>
 
-long CalendarEvent::uuid = 0l;
+long long CalendarEvent::uuid = 0l;
 
 CalendarEvent::CalendarEvent()
 {
+}
+
+CalendarEvent CalendarEvent::newInstance(CalendarEvent old) {
+    old.mId = uuid;
+    uuid++;
+    return old;
+}
+
+void CalendarEvent::makeUnique()
+{
     this->mId = uuid;
-    this->mRepeatMode = RepeatMode::NONE;
-    // DEBUG
-    this->mRepeatMode = RepeatMode::PER_DAY;
-    // END_DEBUG
     uuid++;
 }
 
@@ -19,10 +25,9 @@ QList<QDate> CalendarEvent::expandDateFromRepeat() const
     QDate initDate = this->startDateTime().date();
     while (initDate <= this->endDateTime().date()) {
         dateList.append(initDate);
-        if (mRepeatMode == RepeatMode::NONE) {
-            break;
-        }
         switch(this->mRepeatMode) {
+        case RepeatMode::NONE:
+            initDate = initDate.addDays(1);
         case RepeatMode::PER_DAY_OF_WEEK:
             initDate = initDate.addDays(7);
             break;
@@ -42,7 +47,7 @@ QList<QDate> CalendarEvent::expandDateFromRepeat() const
     return dateList;
 }
 
-int CalendarEvent::id() const
+long long CalendarEvent::id() const
 {
     return mId;
 }

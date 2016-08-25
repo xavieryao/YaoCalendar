@@ -35,7 +35,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // DEBUG
     QDate today(2016,8,23);
     QList<CalendarEvent> events;
-    CalendarEvent event1, event2, event3;
+    CalendarEvent event1 = CalendarEvent::newInstance();
+    CalendarEvent event2 = CalendarEvent::newInstance();
+    CalendarEvent event3 = CalendarEvent::newInstance();
     event1.setEventName("Eat");
     event2.setEventName("Drink");
     event3.setEventName("Litter");
@@ -101,9 +103,12 @@ void MainWindow::onDateActivated(const QDate &date) {
     EventDialog* dialog = new EventDialog();
     QList<CalendarEvent> eventList = this->mEventMap->value(date);
     if (!eventList.empty()) {
+        qDebug() << "at";
         event = eventList.at(0);
+        qDebug() << "first" << event.id();
         dialog->setEvent(event, false);
     } else {
+        event = CalendarEvent::newInstance();
         QDateTime startTime, endTime;
         QTime currentTime = QTime::currentTime();
         currentTime.setHMS(currentTime.hour(), currentTime.minute()-currentTime.minute()%15, 0);
@@ -136,7 +141,5 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
     }
 
     // TODO Store!
-    // TODO Reload!!
-
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
 }
