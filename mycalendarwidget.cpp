@@ -48,7 +48,7 @@ void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDa
     painter->drawRect(rect);
     painter->restore();
 
-    if (mEventMap->contains(date)) {
+    if (!mEventMap->value(date).empty()) {
 //        qDebug() << "have event(s) on " << date << rect;
 
         // Draw a triangle event indicator.

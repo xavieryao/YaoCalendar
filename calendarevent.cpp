@@ -1,10 +1,15 @@
 #include "calendarevent.h"
+#include <QDebug>
 
 long CalendarEvent::uuid = 0l;
 
 CalendarEvent::CalendarEvent()
 {
     this->mId = uuid;
+    this->mRepeatMode = RepeatMode::NONE;
+    // DEBUG
+    this->mRepeatMode = RepeatMode::PER_DAY;
+    // END_DEBUG
     uuid++;
 }
 

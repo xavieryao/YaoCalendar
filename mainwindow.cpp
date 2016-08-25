@@ -102,6 +102,7 @@ void MainWindow::onDateActivated(const QDate &date) {
     QList<CalendarEvent> eventList = this->mEventMap->value(date);
     if (!eventList.empty()) {
         event = eventList.at(0);
+        dialog->setEvent(event, false);
     } else {
         QDateTime startTime, endTime;
         QTime currentTime = QTime::currentTime();
@@ -112,8 +113,8 @@ void MainWindow::onDateActivated(const QDate &date) {
         endTime.setTime(currentTime.addSecs(60*120));
         event.setStartTime(startTime);
         event.setEndTime(endTime);
+        dialog->setEvent(event);
     }
-    dialog->setEvent(event);
     connect(dialog, &EventDialog::confirmedEventChange, this, &MainWindow::onEventModified);
     dialog->exec();
 }
@@ -136,4 +137,6 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
 
     // TODO Store!
     // TODO Reload!!
+
+    mSideBar->updateEventList(ui->calendarWidget->selectedDate());
 }
