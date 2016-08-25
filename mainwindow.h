@@ -34,8 +34,10 @@ private:
 
     void setUpCalendarNavigator();
 
-    const int MIN_WIDTH_WITH_SIDEBAR = 590;
-    const int SIDE_BAR_WIDTH = 240;
+    static const int MIN_WIDTH_WITH_SIDEBAR = 590;
+    static const int SIDE_BAR_WIDTH = 240;
+
+public slots:
 
 private slots:
     void formatAndSetMonthLabel(int year, int month);

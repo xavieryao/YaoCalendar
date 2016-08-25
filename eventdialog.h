@@ -47,7 +47,6 @@ signals:
     void eventChanged(CalendarEvent& event);
     void confirmedEventChange(CalendarEvent event);
 public slots:
-    void chooseColor();
 private:
     CalendarEvent mEvent;
 
@@ -75,6 +74,7 @@ private slots:
     void onEndDateChanged(const QDate &date);
     void onEventChanged(CalendarEvent& event);
     void onOkClicked();
+    void chooseColor();
 };
 
 
