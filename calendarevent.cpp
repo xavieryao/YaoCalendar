@@ -39,6 +39,16 @@ void CalendarEvent::setRepeatEndDate(const QDate &repeatEndDate)
     mRepeatEndDate = repeatEndDate;
 }
 
+RepeatMode CalendarEvent::repeatMode() const
+{
+    return mRepeatMode;
+}
+
+void CalendarEvent::setRepeatMode(const RepeatMode &repeatMode)
+{
+    mRepeatMode = repeatMode;
+}
+
 QList<QDate> CalendarEvent::expandDateFromRepeat() const
 {
     QList<QDate> dateList;

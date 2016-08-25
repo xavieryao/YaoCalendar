@@ -35,10 +35,13 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     mLocationEdit->setPlaceholderText(tr("Add Location"));
     mDescriptionEdit->setPlaceholderText(tr("Add note, URL or file."));
 
+    mRepeatWidget = new RepeatWidget(this);
+
     rootLayout->addWidget(mTitleWidget);
     rootLayout->addWidget(mLocationEdit);
     rootLayout->addWidget(setUpDurationWidget());
     rootLayout->addWidget(setUpRepeatCombo());
+    rootLayout->addWidget(mRepeatWidget);
     rootLayout->addWidget(mDescriptionEdit);
     rootLayout->addWidget(setUpButtonWidget());
 
@@ -68,12 +71,8 @@ QWidget* EventDialog::setUpDurationWidget() {
     mEndDateTime = new QDateTimeEdit(durationWidget);
     mStartDate = new QDateEdit(durationWidget);
     mEndDate = new QDateEdit(durationWidget);
-    mStartTime = new QTimeEdit(durationWidget);
-    mEndTime = new QTimeEdit(durationWidget);
     mStartDate->setVisible(false);
     mEndDate->setVisible(false);
-    mStartTime->setVisible(false);
-    mEndTime->setVisible(false);
 
     mAllDay = new QCheckBox(durationWidget);
     mAllDay->setChecked(false);
@@ -108,12 +107,15 @@ QWidget* EventDialog::setUpRepeatCombo() {
     QFormLayout* layout = new QFormLayout(widget);
     widget->setLayout(layout);
     mRepeat = new QComboBox(widget);
-    mRepeat->addItem(tr("Don\'t Repeat"), RepeatMode::NONE);
-    mRepeat->addItem(tr("Per Day"), RepeatMode::PER_DAY);
-    mRepeat->addItem(tr("Per Week"), RepeatMode::PER_DAY_OF_WEEK);
-    mRepeat->addItem(tr("Per Month"), RepeatMode::PER_MONTH);
-    mRepeat->addItem(tr("Per Year"), RepeatMode::PER_YEAR);
+    mRepeat->addItem(tr("Don\'t Repeat"), QVariant::fromValue(RepeatMode::NONE));
+    mRepeat->addItem(tr("Per Day"), QVariant::fromValue(RepeatMode::PER_DAY));
+    mRepeat->addItem(tr("Per Week"), QVariant::fromValue(RepeatMode::PER_DAY_OF_WEEK));
+    mRepeat->addItem(tr("Per Month"), QVariant::fromValue(RepeatMode::PER_MONTH));
+    mRepeat->addItem(tr("Per Year"), QVariant::fromValue(RepeatMode::PER_YEAR));
     layout->addRow(new QLabel(tr("Repeat:")), mRepeat);
+
+    connect(mRepeat, static_cast<void (QComboBox:: *)(int index)>(&QComboBox::currentIndexChanged)
+            , this, &EventDialog::onRepeatModeChanged);
     return widget;
 }
 
@@ -180,6 +182,12 @@ void EventDialog::onEventChanged(CalendarEvent& event) {
     mEndDateTime->setDateTime(event.endDateTime());
     mStartDate->setDate(event.startDateTime().date());
     mEndDate->setDate(event.endDateTime().date());
+    mRepeat->setCurrentIndex(event.repeatMode());
+    if (event.repeatMode() == RepeatMode::NONE) {
+        mRepeatWidget->setVisible(false);
+    } else {
+        mRepeatWidget->setVisible(true);
+    }
 }
 
 void EventDialog::onStartDateTimeChanged(const QDateTime &datetime) {
@@ -214,4 +222,9 @@ void EventDialog::onOkClicked() {
 
     emit confirmedEventChange(this->mOrigEvent, this->mEvent, this->mIsNew);
     this->done(QDialog::Accepted);
+}
+
+void EventDialog::onRepeatModeChanged(int index) {
+    mEvent.setRepeatMode(RepeatMode(index));
+    emit eventChanged(this->mEvent);
 }

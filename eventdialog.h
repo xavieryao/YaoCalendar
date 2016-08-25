@@ -40,7 +40,7 @@ private:
     QColor mColor;
 };
 
-class RepeatWidget : QWidget{
+class RepeatWidget : public QWidget{
     Q_OBJECT
 public:
     explicit RepeatWidget(QWidget* parent = 0) : QWidget(parent) {
@@ -51,7 +51,7 @@ public:
         endDateEdit = new QDateEdit(this);
         layout->addRow(startLabel, startDateEdit);
         layout->addRow(endLabel, endDateEdit);
-        this->setVisible(false);
+        this->setLayout(layout);
     }
 
     QLabel* startLabel;
@@ -87,8 +87,6 @@ private:
     QCheckBox* mAllDay;
     QDateEdit* mStartDate;
     QDateEdit* mEndDate;
-    QTimeEdit* mStartTime;
-    QTimeEdit* mEndTime;
     QFormLayout* mFormLayout;
     QLabel* mStartLabel;
     QLabel* mEndLabel;
@@ -108,6 +106,7 @@ private slots:
     void onEventChanged(CalendarEvent& event);
     void onOkClicked();
     void chooseColor();
+    void onRepeatModeChanged(int index);
 };
 
 

@@ -12,6 +12,8 @@ enum RepeatMode
     NONE, PER_DAY_OF_WEEK, PER_DAY, PER_MONTH, PER_YEAR
 };
 
+Q_DECLARE_METATYPE(RepeatMode)
+
 class CalendarEvent
 {
 public:
@@ -55,6 +57,9 @@ public:
 
     QDate repeatEndDate() const;
     void setRepeatEndDate(const QDate &repeatEndDate);
+
+    RepeatMode repeatMode() const;
+    void setRepeatMode(const RepeatMode &repeatMode);
 
 signals:
 
