@@ -40,7 +40,15 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     mAllDay = new QCheckBox(durationWidget);
     mAllDay->setChecked(false);
 
+    mRepeat = new QComboBox(durationWidget);
+    mRepeat->addItem(tr("Don\'t Repeat"), RepeatMode::NONE);
+    mRepeat->addItem(tr("Per Day"), RepeatMode::PER_DAY);
+    mRepeat->addItem(tr("Per Week"), RepeatMode::PER_DAY_OF_WEEK);
+    mRepeat->addItem(tr("Per Month"), RepeatMode::PER_MONTH);
+    mRepeat->addItem(tr("Per Year"), RepeatMode::PER_YEAR);
+
     mFormLayout->addRow(new QLabel(tr("All Day:"), durationWidget), mAllDay);
+    mFormLayout->addRow(new QLabel(tr("Repeat:")), mRepeat);
     mFormLayout->addRow(mStartLabel, mStartDateTime);
     mFormLayout->addRow(mEndLabel, mEndDateTime);
 
@@ -88,7 +96,7 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     connect(btnOk, &QPushButton::clicked, this, &EventDialog::onOkClicked);
 }
 
-void EventDialog::setEvent(CalendarEvent event) {
+void EventDialog::setEvent(CalendarEvent event, bool isNew) {
     this->mEvent = event;
     this->mOrigEvent = event;
     this->mIsNew = isNew;

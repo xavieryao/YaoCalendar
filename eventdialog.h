@@ -12,6 +12,7 @@
 #include <QCheckBox>
 #include <QFormLayout>
 #include <QDateEdit>
+#include <QComboBox>
 #include <QLabel>
 #include "calendarevent.h"
 
@@ -67,6 +68,7 @@ private:
     QFormLayout* mFormLayout;
     QLabel* mStartLabel;
     QLabel* mEndLabel;
+    QComboBox* mRepeat;
 
 private slots:
     void onAllDayChanged(int state);
