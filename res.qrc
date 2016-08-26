@@ -9,4 +9,7 @@
     <qresource prefix="/icon">
         <file>res/pin.png</file>
     </qresource>
+    <qresource prefix="/translations">
+        <file alias="zh_CN">yaocalendar_zh_CN.qm</file>
+    </qresource>
 </RCC>
