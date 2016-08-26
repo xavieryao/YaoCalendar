@@ -51,6 +51,6 @@ void AttachmentWidget::mousePressEvent(QMouseEvent *event)
         drag->setMimeData(mimeData);
         drag->setPixmap(mIconPixmap);
 
-        drag->exec();
+        drag->exec(Qt::CopyAction);
     }
 }
