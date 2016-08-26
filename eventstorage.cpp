@@ -23,10 +23,16 @@ void EventStorage::createEvent(CalendarEvent e) {
 }
 
 EventMap* EventStorage::createEventMap() {
-    // Not implemented
+    EventMap* map = new EventMap;
+    for (auto event : mEventList) {
+        EventMap toExpand = event.expandToMap();
+        EventMapHelper::mergeMap(*map, toExpand);
+    }
+    return map;
 }
 
-void EventStorage::loadFromFile(QFile& saveFile) {
+void EventStorage::loadFromFile(QString fileName) {
+    QFile saveFile(fileName);
     if (!saveFile.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open save file.");
         return;
@@ -38,7 +44,8 @@ void EventStorage::loadFromFile(QFile& saveFile) {
     read(loadDoc.object());
 }
 
-void EventStorage::saveToFile(QFile& saveFile) {
+void EventStorage::saveToFile(QString fileName) {
+    QFile saveFile(fileName);
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
         return;

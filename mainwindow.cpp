@@ -37,7 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     mEventStorage = new EventStorage;
-    mEventMap = new EventMap();
+
+    mEventStorage->loadFromFile(SAVE_FILE_NAME);
+    mEventMap = mEventStorage->createEventMap();
 
     // DEBUG
     /*
@@ -60,22 +62,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->calendarWidget, &MyCalendarWidget::clicked, mSideBar, &SideBar::updateEventList);
     connect(mSideBar, &SideBar::editEvent, this, &MainWindow::openEventWindow);
-
-    // DEBUG
-    QPushButton* btnToJson = new QPushButton("Save File");
-    connect(btnToJson, &QPushButton::clicked, [=]{
-        QFile file(QDir::homePath() + "/yaoCalSave/save.json");
-        qDebug() << QDir::homePath() + "/yaoCalSave/save.json";
-        mEventStorage->saveToFile(file);
-    });
-    QPushButton* btnLoad = new QPushButton("Load File");
-    connect(btnToJson, &QPushButton::clicked, [=]{
-        QFile file(QDir::homePath() + "/yaoCalSave/save.json");
-
-        mEventStorage->loadFromFile(file);
-    });
-    ui->centralHorizontalLayout->addWidget(btnToJson);
-    ui->centralHorizontalLayout->addWidget(btnLoad);
 }
 
 MainWindow::~MainWindow()
@@ -180,6 +166,7 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
             EventMap map = event.expandToMap();
             EventMapHelper::mergeMap(*mEventMap, map);
             mSideBar->updateEventList(ui->calendarWidget->selectedDate());
+            mEventStorage->saveToFile(SAVE_FILE_NAME);
             return;
         } else {
             EventMap m = origEvent.expandToMap();
@@ -193,6 +180,7 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
     EventMap map = event.expandToMap();
     EventMapHelper::mergeMap(*mEventMap, map);
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
+    mEventStorage->saveToFile(SAVE_FILE_NAME);
 
 }
 

@@ -22,8 +22,8 @@ public:
     void removeEvent(CalendarEvent e);
     void createEvent(CalendarEvent e);
     EventMap* createEventMap();
-    void loadFromFile(QFile& file);
-    void saveToFile(QFile& file);
+    void loadFromFile(QString fileName);
+    void saveToFile(QString fileName);
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
