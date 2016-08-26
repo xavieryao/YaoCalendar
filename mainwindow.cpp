@@ -114,7 +114,7 @@ void MainWindow::setUpCalendarNavigator() {
 #ifdef Q_OS_OSX
         MainWindow* mainWindow = new MainWindow;
         mainWindow->setWindowFlags(mainWindow->windowFlags() | Qt::WindowTransparentForInput
-                                   | Qt::WindowStaysOnTopHint);
+                                   | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
         mainWindow->move(this->pos().x(), this->pos().y());
         mainWindow->resize(this->size());
         mainWindow->setSelection(ui->calendarWidget->selectedDate());
@@ -124,7 +124,7 @@ void MainWindow::setUpCalendarNavigator() {
         this->close();
 #else
         Qt::WindowFlags flag = windowFlags();
-        flag = flag | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint;
+        flag = flag | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint;
         this->setWindowFlags(flag);
         show();
         showTrayIcon();
@@ -263,6 +263,7 @@ void MainWindow::showTrayIcon()
         Qt::WindowFlags flag = windowFlags();
         flag = flag & !Qt::WindowTransparentForInput;
         flag = flag & !Qt::WindowStaysOnTopHint;
+        flag = flag & !Qt::FramelessWindowHint;
 //        flag = flag | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint;
         this->setWindowFlags(flag);
         show();
