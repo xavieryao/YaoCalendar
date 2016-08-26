@@ -56,7 +56,7 @@ private:
     void setUpCalendarNavigator();
     void configureMultiUser(QStringList& userList);
 
-    static const int MIN_WIDTH_WITH_SIDEBAR = 580;
+    static const int MIN_WIDTH_WITH_SIDEBAR = 595;
     static const int SIDE_BAR_WIDTH = 240;
     const QString DEFAULT_USER_NAME = "default";
 
