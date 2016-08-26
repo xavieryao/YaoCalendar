@@ -31,21 +31,25 @@ EventMap* EventStorage::createEventMap() {
     return map;
 }
 
-void EventStorage::loadFromFile() {
-
-    QFile saveFile(QString("./%1_save.json").arg(mUserName));
+bool EventStorage::loadFromFile(QString fileName) {
+    QString name = fileName;
+    if (fileName == QString()) {
+        name = QString("./%1_save.json").arg(mUserName);
+    }
+    QFile saveFile(name);
     if (!saveFile.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open save file.");
-        return;
+        return false;
     }
 
     QByteArray saveData = saveFile.readAll();
 
     QJsonDocument loadDoc = QJsonDocument::fromJson(saveData);
     read(loadDoc.object());
+    return true;
 }
 
-void EventStorage::saveToFile(QString fileName) {
+bool EventStorage::saveToFile(QString fileName) {
     QString name = fileName;
     if (fileName == QString()) {
         name = QString("./%1_save.json").arg(mUserName);
@@ -53,13 +57,14 @@ void EventStorage::saveToFile(QString fileName) {
     QFile saveFile(name);
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
-        return;
+        return false;
     }
     QJsonObject saveObj;
     write(saveObj);
     QJsonDocument saveDoc(saveObj);
     saveFile.write(saveDoc.toJson());
     saveFile.close();
+    return true;
 }
 
 void EventStorage::read(const QJsonObject &json) {
@@ -74,7 +79,8 @@ void EventStorage::read(const QJsonObject &json) {
     mUserName = json["username"].toString();
 }
 
-void EventStorage::write(QJsonObject &json) const {
+void EventStorage::write(QJsonObject &json) const
+{
     json["version"] = "1.0"; // TEMP
     json["other_meta_info"] = "foobar";
     json["username"] = mUserName;
@@ -95,4 +101,18 @@ QString EventStorage::userName() const
 void EventStorage::setUserName(const QString &userName)
 {
     mUserName = userName;
+}
+
+QList<CalendarEvent> EventStorage::eventList() const
+{
+    return mEventList;
+}
+
+void EventStorage::merge(EventStorage *from)
+{
+    QList<CalendarEvent> list = from->eventList();
+    for (auto event: list) {
+        CalendarEvent e = CalendarEvent::newInstance(event);
+        this->createEvent(e);
+    }
 }

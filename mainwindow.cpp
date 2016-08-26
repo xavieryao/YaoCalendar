@@ -204,11 +204,13 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
             EventMap map = event.expandToMap();
             EventMapHelper::mergeMap(*mEventMap, map);
             mSideBar->updateEventList(ui->calendarWidget->selectedDate());
+            ui->calendarWidget->update();
             mEventStorage->saveToFile();
             return;
         } else {
             EventMap m = origEvent.expandToMap();
             EventMapHelper::splitMap(*mEventMap, m);
+            ui->calendarWidget->update();
             mEventStorage->modifyEvent(event);
         }
 
@@ -217,6 +219,7 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
     }
     EventMap map = event.expandToMap();
     EventMapHelper::mergeMap(*mEventMap, map);
+    ui->calendarWidget->update();
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
     mEventStorage->saveToFile();
 
@@ -306,14 +309,18 @@ void MainWindow::onDeleteEvent(CalendarEvent &event)
             mEventStorage->createEvent(futureE);
         }
         mEventStorage->removeEvent(event);
+        ui->calendarWidget->update();
         mSideBar->updateEventList(ui->calendarWidget->selectedDate());
         mEventStorage->saveToFile();
+
         return;
     } else {
         EventMap m = event.expandToMap();
         EventMapHelper::splitMap(*mEventMap, m);
+        ui->calendarWidget->update();
         mEventStorage->removeEvent(event);
     }
+    ui->calendarWidget->update();
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
     mEventStorage->saveToFile();
 }
@@ -428,8 +435,8 @@ void MainWindow::editUser()
 void MainWindow::exportEvents()
 {
     QString saveFile = QFileDialog::getSaveFileName(this, tr("Export to..."),
-                         QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+"/exported.json",
-                         "JSON (*.json)");
+                                                    QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+"/exported.json",
+                                                    "JSON (*.json)");
     qDebug() << saveFile;
     if (saveFile.isEmpty()) {
         return;
@@ -439,5 +446,23 @@ void MainWindow::exportEvents()
 
 void MainWindow::importEvents()
 {
+    QString saveFile = QFileDialog::getOpenFileName(this, tr("Import from..."),
+                                                    QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
+                                                    "JSON (*.json)");
+    if (saveFile.isEmpty()) {
+        return;
+    }
+    EventStorage* storage = new EventStorage;
+    bool result = storage->loadFromFile(saveFile);
+    if (result &&
+            QMessageBox::Yes == QMessageBox::question(this, tr("Confirm Importing Events"),
+                                                      tr("Import all events from user %1").arg(storage->userName()))) {
+        mEventStorage->merge(storage);
+        mEventMap = mEventStorage->createEventMap();
+        ui->calendarWidget->setEventMap(mEventMap);
+        ui->calendarWidget->update();
+        mSideBar->setEventMap(mEventMap);
+        mSideBar->updateEventList(ui->calendarWidget->selectedDate());
+    }
 
 }

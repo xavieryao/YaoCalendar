@@ -22,13 +22,16 @@ public:
     void removeEvent(CalendarEvent e);
     void createEvent(CalendarEvent e);
     EventMap* createEventMap();
-    void loadFromFile();
-    void saveToFile(QString fileName = QString());
+    bool loadFromFile(QString fileName = QString());
+    bool saveToFile(QString fileName = QString());
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
+    void merge(EventStorage* from);
 
     QString userName() const;
     void setUserName(const QString &userName);
+
+    QList<CalendarEvent> eventList() const;
 
 signals:
 
