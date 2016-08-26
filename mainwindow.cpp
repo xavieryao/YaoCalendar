@@ -41,22 +41,6 @@ MainWindow::MainWindow(QWidget *parent) :
     mEventStorage->loadFromFile(SAVE_FILE_NAME);
     mEventMap = mEventStorage->createEventMap();
 
-    // DEBUG
-    /*
-    QDate today(2016,8,23);
-    QList<CalendarEvent> events;
-    CalendarEvent event1;
-    event1.setEventName("Eat");
-    event1.setStartTime(QDateTime(QDate(2016,8,20), QTime(1,1,1)));
-    event1.setEndTime(QDateTime(QDate(2016,8,21), QTime(5,5,5)));
-    event1.setRepeatMode(RepeatMode::PER_WEEK);
-    event1.setRepeatEndDate(QDate(2016,9,13));
-
-    EventMap map = event1.expandToMap();
-
-    mergeMap(*mEventMap, map);
-    */
-    // END DEBUG
     ui->calendarWidget->setEventMap(mEventMap);
     mSideBar->setEventMap(mEventMap);
 

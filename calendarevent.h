@@ -66,6 +66,9 @@ public:
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
+    QString attachment() const;
+    void setAttachment(const QString &attachment);
+
 signals:
 
 public slots:
@@ -80,6 +83,7 @@ private:
     bool mIsAllDayEvent = false;
     QString mDetail = QString();
     RepeatMode mRepeatMode = RepeatMode::NONE;
+    QString mAttachment = QString();
 
     long long mId;
 

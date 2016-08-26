@@ -113,6 +113,7 @@ void CalendarEvent::write(QJsonObject &json) const {
     json["repeatMode"] = (int) mRepeatMode;
     json["repeatEndDate"] = repeatEndDate().toString(Qt::ISODate);
     json["isAllDay"] = mIsAllDayEvent;
+    json["attachment"] = mAttachment;
 }
 
 void CalendarEvent::read(const QJsonObject &json) {
@@ -125,9 +126,21 @@ void CalendarEvent::read(const QJsonObject &json) {
     mRepeatMode = RepeatMode(json["repeatMode"].toInt());
     mRepeatEndDate = QDate::fromString(json["repeatEndDate"].toString(), Qt::ISODate);
     mIsAllDayEvent = json["isAllDay"].toBool();
+    mAttachment = json["attachment"].toString();
 }
 
 // Auto-generated getter and setter member functions,
+
+QString CalendarEvent::attachment() const
+{
+    return mAttachment;
+}
+
+void CalendarEvent::setAttachment(const QString &attachment)
+{
+    mAttachment = attachment;
+}
+
 long long CalendarEvent::id() const
 {
     return mId;

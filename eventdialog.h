@@ -15,8 +15,10 @@
 #include <QDateEdit>
 #include <QComboBox>
 #include <QTimeEdit>
+#include <QUrl>
 #include <QLabel>
 #include "calendarevent.h"
+#include "dndtextedit.h"
 
 class ColorButton : public QPushButton {
     Q_OBJECT
@@ -77,7 +79,7 @@ private:
     ColorButton* mColorBtn;
     QLineEdit* mTitleEdit;
     QLineEdit* mLocationEdit;
-    QTextEdit* mDescriptionEdit;
+    DnDTextEdit* mDescriptionEdit;
     QDateTimeEdit* mStartDateTime;
     QDateTimeEdit* mEndDateTime;
     QCheckBox* mAllDay;
@@ -103,6 +105,7 @@ private slots:
     void onEventDateTimeChanged(CalendarEvent& event);
     void onOkClicked();
     void chooseColor();
+    void onFileDropped(const QUrl &url);
     void onRepeatModeChanged(int index);
 };
 

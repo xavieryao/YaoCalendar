@@ -27,7 +27,7 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     mTitleLayout->addWidget(mColorBtn);
     mTitleWidget->setLayout(mTitleLayout);
     mLocationEdit = new QLineEdit(this);
-    mDescriptionEdit = new QTextEdit(this);
+    mDescriptionEdit = new DnDTextEdit(this);
 
     mTitleEdit->setPlaceholderText(tr("New Event"));
     mLocationEdit->setPlaceholderText(tr("Add Location"));
@@ -254,4 +254,8 @@ void EventDialog::onRepeatModeChanged(int index) {
     } else {
         mRepeatWidget->setVisible(true);
     }
+}
+
+void EventDialog::onFileDropped(const QUrl &url) {
+    qDebug() << "file dropped" << url.toLocalFile();
 }
