@@ -10,6 +10,9 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QSpacerItem>
+#include <QFileInfo>
+#include <QFileIconProvider>
+#include <QIcon>
 
 EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
 {
@@ -33,6 +36,9 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     mLocationEdit->setPlaceholderText(tr("Add Location"));
     mDescriptionEdit->setPlaceholderText(tr("Add note, URL or file."));
 
+    mIcon = new QLabel(this);
+    mAttachment = new QLabel(this);
+
     mRepeatWidget = new RepeatWidget(this);
 
     rootLayout->addWidget(mTitleWidget);
@@ -41,6 +47,10 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     rootLayout->addWidget(setUpRepeatCombo());
     rootLayout->addWidget(mRepeatWidget);
     rootLayout->addWidget(mDescriptionEdit);
+
+    rootLayout->addWidget(mIcon);
+    rootLayout->addWidget(mAttachment);
+
     rootLayout->addWidget(setUpButtonWidget());
 
     connect(mColorBtn, &ColorButton::clicked, this, &EventDialog::chooseColor);
@@ -54,7 +64,7 @@ EventDialog::EventDialog(QWidget *parent) : QDialog(parent)
     connect(mEndDateTime, &QDateTimeEdit::dateTimeChanged, this, &EventDialog::onEndDateTimeChanged);
 
     connect(this, &EventDialog::eventDateTimeChanged, this, &EventDialog::onEventDateTimeChanged);
-
+    connect(mDescriptionEdit, &DnDTextEdit::fileDropped, this, &EventDialog::onFileDropped);
 
 }
 
@@ -201,6 +211,24 @@ void EventDialog::configureUiFromEvent() {
 
     // set all day
     mAllDay->setChecked(mEvent.isAllDayEvent());
+
+    // set attachment
+    setUpAttachmentWidget();
+}
+
+void EventDialog::setUpAttachmentWidget() {
+    if (mEvent.attachment().isEmpty()) {
+        mIcon->setVisible(false);
+        mAttachment->setVisible(false);
+    } else {
+        QFileInfo info(mEvent.attachment());
+        QFileIconProvider ip;
+        QIcon icon = ip.icon(info);
+        mIcon->setPixmap(icon.pixmap(30, 30));
+        mAttachment->setText(info.fileName());
+        mIcon->setVisible(true);
+        mAttachment->setVisible(true);
+    }
 }
 
 void EventDialog::onEventDateTimeChanged(CalendarEvent& event) {
@@ -258,4 +286,7 @@ void EventDialog::onRepeatModeChanged(int index) {
 
 void EventDialog::onFileDropped(const QUrl &url) {
     qDebug() << "file dropped" << url.toLocalFile();
+    mEvent.setAttachment(url.toLocalFile());
+    setUpAttachmentWidget();
 }
+

@@ -90,10 +90,13 @@ private:
     QLabel* mEndLabel;
     QComboBox* mRepeat;
     RepeatWidget* mRepeatWidget;
+    QLabel* mIcon;
+    QLabel* mAttachment;
 
     QWidget* setUpRepeatCombo();
     QWidget* setUpDurationWidget();
     QWidget* setUpButtonWidget();
+    void setUpAttachmentWidget();
     void configureUiFromEvent();
 
 private slots:
