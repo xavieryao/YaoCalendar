@@ -27,11 +27,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mSideBar = new SideBar(this);
     mSideBar->setFixedWidth(SIDE_BAR_WIDTH);
+
+    QVBoxLayout* vlayout = new QVBoxLayout(this);
     ui->centralHorizontalLayout->addWidget(mSideBar);
 
     QWidget* centralWidget = new QWidget(this);
     centralWidget->setLayout(ui->centralHorizontalLayout);
-    setCentralWidget(centralWidget);
+//    setCentralWidget(centralWidget);
+
+    vlayout->addWidget(setUpToolBar());
+    vlayout->addWidget(centralWidget);
+
+    QWidget* w = new QWidget(this);
+    w->setLayout(vlayout);
+    setCentralWidget(w);
 
     if (this->size().width() < this->MIN_WIDTH_WITH_SIDEBAR) {
         mSideBar->setVisible(false);
@@ -47,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->calendarWidget, &MyCalendarWidget::clicked, mSideBar, &SideBar::updateEventList);
     connect(mSideBar, &SideBar::editEvent, this, &MainWindow::openEventWindow);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -54,6 +65,25 @@ MainWindow::~MainWindow()
     delete ui;
     delete mEventMap;
     delete mEventStorage;
+}
+
+QWidget* MainWindow::setUpToolBar()
+{
+
+    QWidget* toolBar = new QWidget(this);
+    QHBoxLayout* toolLayout = new QHBoxLayout(toolBar);
+    toolBar->setLayout(toolLayout);
+
+    QFont font;
+    font.setFamily("FontAwesome");
+
+    QPushButton* pinBtn = new QPushButton(toolBar);
+    pinBtn->setFont(font);
+    pinBtn->setText(QChar(0xf276));
+
+    toolLayout->addWidget(pinBtn);
+    toolLayout->addStretch();
+    return toolBar;
 }
 
 void MainWindow::setUpCalendarNavigator() {
