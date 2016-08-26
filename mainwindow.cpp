@@ -1,25 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QFile>
-#include <QDebug>
-#include <QFont>
-#include <QResizeEvent>
-#include <QTime>
-#include <QFile>
-#include <QMessageBox>
-#include <QAbstractButton>
-#include <QDir>
-#include <QJsonDocument>
-#include <QFileInfo>
-#include <QMenu>
-#include <QSystemTrayIcon>
-#include "eventdialog.h"
-#include "eventmaphelper.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    mSettings = new QSettings("./config.plist", QSettings::IniFormat,
+                              this);
+
     QFontDatabase::addApplicationFont(":Font/fontawesome");
     QFontDatabase::addApplicationFont(":Font/nevis");
     ui->setupUi(this);
@@ -41,6 +29,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mEventStorage = new EventStorage;
 
+    QStringList userList = mSettings->value("users").toStringList();
+    if (userList.size() == 0) {
+        userList.append("default");
+        mSettings->setValue("users", userList);
+    }
+
+    if (!mSettings->contains("currentUser")) {
+        mSettings->setValue("currentUser", userList.first());
+    }
+    QString currentUser = mSettings->value("currentUser", "default").toString();
+    mEventStorage->setUserName(currentUser);
     mEventStorage->loadFromFile();
     mEventMap = mEventStorage->createEventMap();
 
@@ -54,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(mSideBar, &SideBar::deleteEvent, this, &MainWindow::onDeleteEvent);
 
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
-    configureMultiUser();
+    configureMultiUser(userList);
 }
 
 MainWindow::~MainWindow()
@@ -231,10 +230,6 @@ void MainWindow::openEventWindow(CalendarEvent event, bool newEvent) {
     dialog->exec();
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *e) {
-    qDebug() << "mouse move";
-}
-
 void MainWindow::setSelection(const QDate& date)
 {
     ui->calendarWidget->setSelectedDate(date);
@@ -324,7 +319,14 @@ void MainWindow::onDeleteEvent(CalendarEvent &event)
     mEventStorage->saveToFile();
 }
 
-void MainWindow::configureMultiUser()
+void MainWindow::configureMultiUser(QStringList& userList)
 {
-
+    for (auto user : userList) {
+        QAction* action = new QAction(user, this);
+        ui->menuUser->addAction(action);
+        qDebug() << "add";
+    }
+    ui->menuUser->addSeparator();
+    QAction* addUser = new QAction(tr("&Add User"), this);
+    ui->menuUser->addAction(addUser);
 }

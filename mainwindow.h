@@ -11,6 +11,22 @@
 #include "eventmap.h"
 #include "calendarevent.h"
 #include "eventstorage.h"
+#include <QDebug>
+#include <QFont>
+#include <QResizeEvent>
+#include <QTime>
+#include <QFile>
+#include <QMessageBox>
+#include <QAbstractButton>
+#include <QDir>
+#include <QJsonDocument>
+#include <QFileInfo>
+#include <QMenu>
+#include <QSystemTrayIcon>
+#include <QSettings>
+#include <QMenuBar>
+#include "eventdialog.h"
+#include "eventmaphelper.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,7 +44,6 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *event);
-    void mousePressEvent(QMouseEvent *e);
 
 private:
     Ui::MainWindow *ui;
@@ -36,9 +51,10 @@ private:
 
     EventMap* mEventMap;
     EventStorage* mEventStorage;
+    QSettings* mSettings;
 
     void setUpCalendarNavigator();
-    void configureMultiUser();
+    void configureMultiUser(QStringList& userList);
 
     static const int MIN_WIDTH_WITH_SIDEBAR = 580;
     static const int SIDE_BAR_WIDTH = 240;
