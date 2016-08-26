@@ -327,10 +327,16 @@ void MainWindow::configureMultiUser(QStringList& userList)
 #endif
 
     QMenu* menuUser = menuBar()->addMenu(tr("&User"));
+    QString currentUser = QSettings.value("currentUser");
     for (auto user : userList) {
         QAction* action = new QAction(user, this);
         action->setData(user);
+        action->setCheckable(true);
+        if (user == currentUser) {
+            action->setChecked(true);
+        }
         menuUser->addAction(action);
+
         qDebug() << "add";
     }
     menuUser->addSeparator();
@@ -340,5 +346,23 @@ void MainWindow::configureMultiUser(QStringList& userList)
 
 void MainWindow::onUserChanged()
 {
-//    for ()
+    QAction* action = qobject_cast<QAction*>(sender());
+    action->setChecked(true);
+    QString currentUser = action->data().toString();
+    QList<QAction* >actions = menuBar()->actions();
+    for (auto act : actions) {
+        if (act != action) {
+            action->setChecked(false);
+        }
+    }
+
+    mSettings->setValue("currentUser", currentUser);
+    delete mEventStorage;
+    delete mEventMap;
+    mEventStorage = new EventStorage();
+    mEventStorage->setUserName(currentUser);
+    mEventStorage->loadFromFile();
+    mEventMap = mEventStorage->createEventMap();
+    ui->calendarWidget->update();
+    mSideBar->updateEventList(ui->calendarWidget->selectedDate());
 }
