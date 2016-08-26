@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(mSideBar, &SideBar::deleteEvent, this, &MainWindow::onDeleteEvent);
 
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
+    configureMultiUser();
 }
 
 MainWindow::~MainWindow()
@@ -321,4 +322,9 @@ void MainWindow::onDeleteEvent(CalendarEvent &event)
     }
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
     mEventStorage->saveToFile();
+}
+
+void MainWindow::configureMultiUser()
+{
+
 }

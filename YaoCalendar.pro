@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     eventstorage.cpp \
     eventmaphelper.cpp \
     dndtextedit.cpp \
-    attachmentwidget.cpp
+    attachmentwidget.cpp \
+    globalconfig.cpp
 
 HEADERS  += mainwindow.h \
     mycalendarwidget.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     eventstorage.h \
     eventmaphelper.h \
     dndtextedit.h \
-    attachmentwidget.h
+    attachmentwidget.h \
+    globalconfig.h
 
 FORMS    += mainwindow.ui
 

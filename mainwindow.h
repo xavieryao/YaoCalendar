@@ -38,6 +38,7 @@ private:
     EventStorage* mEventStorage;
 
     void setUpCalendarNavigator();
+    void configureMultiUser();
 
     static const int MIN_WIDTH_WITH_SIDEBAR = 580;
     static const int SIDE_BAR_WIDTH = 240;
