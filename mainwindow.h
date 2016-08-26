@@ -41,7 +41,7 @@ private:
 
     static const int MIN_WIDTH_WITH_SIDEBAR = 580;
     static const int SIDE_BAR_WIDTH = 240;
-    const QString SAVE_FILE_NAME = "./save.json";
+    const QString DEFAULT_USER_NAME = "default";
 
 public slots:
 

@@ -31,8 +31,9 @@ EventMap* EventStorage::createEventMap() {
     return map;
 }
 
-void EventStorage::loadFromFile(QString fileName) {
-    QFile saveFile(fileName);
+void EventStorage::loadFromFile() {
+
+    QFile saveFile(QString("./%1_save.json").arg(mUserName));
     if (!saveFile.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open save file.");
         return;
@@ -44,8 +45,9 @@ void EventStorage::loadFromFile(QString fileName) {
     read(loadDoc.object());
 }
 
-void EventStorage::saveToFile(QString fileName) {
-    QFile saveFile(fileName);
+void EventStorage::saveToFile() {
+
+    QFile saveFile(QString("./%1_save.json").arg(mUserName));
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
         return;
@@ -66,11 +68,13 @@ void EventStorage::read(const QJsonObject &json) {
         e.read(obj);
         mEventList.append(e);
     }
+    mUserName = json["username"].toString();
 }
 
 void EventStorage::write(QJsonObject &json) const {
     json["version"] = "1.0"; // TEMP
     json["other_meta_info"] = "foobar";
+    json["username"] = mUserName;
     QJsonArray eventArr;
     for (CalendarEvent e: mEventList) {
         QJsonObject obj;
@@ -78,4 +82,14 @@ void EventStorage::write(QJsonObject &json) const {
         eventArr.append(obj);
     }
     json["events"] = eventArr;
+}
+
+QString EventStorage::userName() const
+{
+    return mUserName;
+}
+
+void EventStorage::setUserName(const QString &userName)
+{
+    mUserName = userName;
 }

@@ -22,10 +22,13 @@ public:
     void removeEvent(CalendarEvent e);
     void createEvent(CalendarEvent e);
     EventMap* createEventMap();
-    void loadFromFile(QString fileName);
-    void saveToFile(QString fileName);
+    void loadFromFile();
+    void saveToFile();
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
+
+    QString userName() const;
+    void setUserName(const QString &userName);
 
 signals:
 
@@ -33,6 +36,7 @@ public slots:
 
 private:
     QList<CalendarEvent> mEventList;
+    QString mUserName = "default";
 };
 
 #endif // EVENTSTORAGE_H

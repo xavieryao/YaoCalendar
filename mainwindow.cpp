@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mEventStorage = new EventStorage;
 
-    mEventStorage->loadFromFile(SAVE_FILE_NAME);
+    mEventStorage->loadFromFile();
     mEventMap = mEventStorage->createEventMap();
 
     ui->calendarWidget->setEventMap(mEventMap);
@@ -205,7 +205,7 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
             EventMap map = event.expandToMap();
             EventMapHelper::mergeMap(*mEventMap, map);
             mSideBar->updateEventList(ui->calendarWidget->selectedDate());
-            mEventStorage->saveToFile(SAVE_FILE_NAME);
+            mEventStorage->saveToFile();
             return;
         } else {
             EventMap m = origEvent.expandToMap();
@@ -219,7 +219,7 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
     EventMap map = event.expandToMap();
     EventMapHelper::mergeMap(*mEventMap, map);
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
-    mEventStorage->saveToFile(SAVE_FILE_NAME);
+    mEventStorage->saveToFile();
 
 }
 
@@ -312,7 +312,7 @@ void MainWindow::onDeleteEvent(CalendarEvent &event)
         }
         mEventStorage->removeEvent(event);
         mSideBar->updateEventList(ui->calendarWidget->selectedDate());
-        mEventStorage->saveToFile(SAVE_FILE_NAME);
+        mEventStorage->saveToFile();
         return;
     } else {
         EventMap m = event.expandToMap();
@@ -320,5 +320,5 @@ void MainWindow::onDeleteEvent(CalendarEvent &event)
         mEventStorage->removeEvent(event);
     }
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
-    mEventStorage->saveToFile(SAVE_FILE_NAME);
+    mEventStorage->saveToFile();
 }
