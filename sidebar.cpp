@@ -3,19 +3,28 @@
 #include <QLabel>
 #include <QListWidgetItem>
 #include <QFrame>
+#include <QDebug>
+#include <QMenu>
+#include <QAction>
 
 SideBar::SideBar(QWidget *parent) : QWidget(parent)
 {
     QVBoxLayout* rootLayout = new QVBoxLayout(parent);
 
-    mTextBrowser = new QTextBrowser(this);
+//    mTextBrowser = new QTextBrowser(this);
     mList = new QListWidget(this);
-    rootLayout->addWidget(mTextBrowser,3);
+    mList->setContextMenuPolicy(Qt::CustomContextMenu);
+    QPalette p = mList->palette();
+    p.setColor(QPalette::Highlight, QColor::fromRgb(254,223,194));
+    mList->setPalette(p);
+//    rootLayout->addWidget(mTextBrowser,3);
     rootLayout->addWidget(mList,7);
 
     this->setLayout(rootLayout);
 
     connect(mList, &QListWidget::itemActivated, this, &SideBar::eventActivated);
+    connect(mList, &QListWidget::customContextMenuRequested, this, &SideBar::showContextMenu);
+
 }
 
 void SideBar::updateEventList(const QDate &date) {
@@ -27,6 +36,7 @@ void SideBar::updateEventList(const QDate &date) {
     for (int i = 0; i < eventList.size(); i++) {
         CalendarEvent event = eventList.at(i);
         QListWidgetItem* item = new QListWidgetItem();
+        item->setData(Qt::UserRole, event.id());
         QWidget *itemWidget = new QWidget(this);
         QWidget *title = new QWidget(this);
         QHBoxLayout *titleLayout = new QHBoxLayout(this);
@@ -88,4 +98,12 @@ QString SideBar::formatDescription(CalendarEvent& e) const{
     return formatDefault.arg(e.startDateTime().toString())
             .arg(e.endDateTime().toString())
             .arg(e.location());
+}
+
+void SideBar::showContextMenu(const QPoint &pos)
+{
+    QMenu menu;
+    QAction action(tr("Delete"));
+    menu.addAction(&action);
+    menu.exec(this->mapToGlobal(pos));
 }

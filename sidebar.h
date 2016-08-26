@@ -21,6 +21,7 @@ public:
 
 signals:
     void editEvent(CalendarEvent event, bool isNew = false);
+    void deleteEvent(CalendarEvent& e);
 
 public slots:
     void updateEventList(const QDate &date);
@@ -34,6 +35,8 @@ private:
 
 private slots:
     void eventActivated(QListWidgetItem* item);
+    void showContextMenu(const QPoint &pos);
+
 };
 
 #endif // SIDEBAR_H
