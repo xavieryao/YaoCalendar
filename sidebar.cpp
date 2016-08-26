@@ -36,7 +36,7 @@ void SideBar::updateEventList(const QDate &date) {
     for (int i = 0; i < eventList.size(); i++) {
         CalendarEvent event = eventList.at(i);
         QListWidgetItem* item = new QListWidgetItem();
-        item->setData(Qt::UserRole, event.id());
+        item->setData(Qt::UserRole, QVariant::fromValue(event));
         QWidget *itemWidget = new QWidget(this);
         QWidget *title = new QWidget(this);
         QHBoxLayout *titleLayout = new QHBoxLayout(this);
@@ -106,9 +106,8 @@ void SideBar::showContextMenu(const QPoint &pos)
     QAction* action = new QAction(tr("Delete"), this);
     menu.addAction(action);
     connect(action, &QAction::triggered, [=]{
-        CalendarEvent e;
-        long long id = mList->selectedItems().first()->data(Qt::UserRole).toLongLong();
-        e.setId(id);
+        QVariant var = mList->selectedItems().first()->data(Qt::UserRole);
+        CalendarEvent e = var.value<CalendarEvent>();
         emit deleteEvent(e);
     });
     menu.exec(this->mapToGlobal(pos));

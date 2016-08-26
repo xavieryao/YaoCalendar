@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->calendarWidget, &MyCalendarWidget::clicked, mSideBar, &SideBar::updateEventList);
     connect(mSideBar, &SideBar::editEvent, this, &MainWindow::openEventWindow);
+    connect(mSideBar, &SideBar::deleteEvent, this, &MainWindow::onDeleteEvent);
 
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
 }
@@ -268,4 +269,53 @@ void MainWindow::showTrayIcon()
         trayIcon->deleteLater();
 
     });
+}
+
+void MainWindow::onDeleteEvent(CalendarEvent &event)
+{
+    if (event.repeatMode() != RepeatMode::NONE) {
+        QMessageBox box;
+        box.setText(tr("Repeating Event"));
+        box.setInformativeText(tr("How do you want to modify a repeating event?"));
+        QAbstractButton *allButton = box.addButton(tr("This And Later"), QMessageBox::YesRole);
+        QAbstractButton *thisButton = box.addButton(tr("Only This"), QMessageBox::NoRole);
+
+        box.setIcon(QMessageBox::Question);
+        box.exec();
+
+        CalendarEvent primary = mEventStorage->findPrimaryEvent(event);
+        EventMap m = primary.expandToMap();
+        EventMapHelper::splitMap(*mEventMap, m);
+        qDebug() << "remove primary";
+        mEventStorage->removeEvent(primary);
+        if (event.startDateTime().date() > primary.startDateTime().date()) {
+            CalendarEvent prevE = CalendarEvent::newInstance(primary);
+            QDateTime t = event.startDateTime();
+            prevE.setRepeatEndDate(event.startDateTime().date().addDays(-1));
+            EventMap prevMap = prevE.expandToMap();
+            EventMapHelper::mergeMap(*mEventMap, prevMap);
+
+            mEventStorage->createEvent(prevE);
+        }
+        if (event.startDateTime().date() < primary.repeatEndDate() && box.clickedButton() == thisButton) {
+            qDebug() << "future";
+            CalendarEvent futureE = CalendarEvent::newInstance(primary);
+            futureE.setStartTime(event.startDateTime().addDays(1));
+            futureE.setEndTime(event.endDateTime().addDays(1));
+            EventMap futureMap = futureE.expandToMap();
+            EventMapHelper::mergeMap(*mEventMap, futureMap);
+            mSideBar->updateEventList(ui->calendarWidget->selectedDate());
+            mEventStorage->createEvent(futureE);
+        }
+        mEventStorage->removeEvent(event);
+        mSideBar->updateEventList(ui->calendarWidget->selectedDate());
+        mEventStorage->saveToFile(SAVE_FILE_NAME);
+        return;
+    } else {
+        EventMap m = event.expandToMap();
+        EventMapHelper::splitMap(*mEventMap, m);
+        mEventStorage->removeEvent(event);
+    }
+    mSideBar->updateEventList(ui->calendarWidget->selectedDate());
+    mEventStorage->saveToFile(SAVE_FILE_NAME);
 }

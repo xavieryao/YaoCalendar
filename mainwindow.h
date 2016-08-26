@@ -50,7 +50,7 @@ private slots:
     void onDateActivated(const QDate &date, QString file);
     void onEventModified(CalendarEvent origEvent, CalendarEvent event, bool isNew);
     void openEventWindow(CalendarEvent event, bool newEvent = false);
-
+    void onDeleteEvent(CalendarEvent& event);
 };
 
 #endif // MAINWINDOW_H
