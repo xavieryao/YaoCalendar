@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
+MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) :
+    QMainWindow(parent, flags),
     ui(new Ui::MainWindow)
 {
     mSettings = new QSettings("./config.plist", QSettings::IniFormat,
@@ -112,9 +112,8 @@ void MainWindow::setUpCalendarNavigator() {
 //        this->centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
         this->setWindowOpacity(0.8);
 #ifdef Q_OS_OSX
-        MainWindow* mainWindow = new MainWindow;
-        mainWindow->setWindowFlags(mainWindow->windowFlags() | Qt::WindowTransparentForInput
-                                   | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+        MainWindow* mainWindow = new MainWindow(0, Qt::WindowTransparentForInput
+                                                | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
         mainWindow->move(this->pos().x(), this->pos().y());
         mainWindow->resize(this->size());
         mainWindow->setSelection(ui->calendarWidget->selectedDate());
@@ -321,15 +320,22 @@ void MainWindow::onDeleteEvent(CalendarEvent &event)
 
 void MainWindow::configureMultiUser(QStringList& userList)
 {
+#ifdef Q_OS_OSX
+    if (this->windowFlags() & Qt::WindowTransparentForInput) {
+        return;
+    }
+#endif
+
+    QMenu* menuUser = menuBar()->addMenu(tr("&User"));
     for (auto user : userList) {
         QAction* action = new QAction(user, this);
         action->setData(user);
-        ui->menuUser->addAction(action);
+        menuUser->addAction(action);
         qDebug() << "add";
     }
-    ui->menuUser->addSeparator();
+    menuUser->addSeparator();
     QAction* addUser = new QAction(tr("&Add User"), this);
-    ui->menuUser->addAction(addUser);
+    menuUser->addAction(addUser);
 }
 
 void MainWindow::onUserChanged()
