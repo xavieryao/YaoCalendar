@@ -19,6 +19,7 @@
 #include <QLabel>
 #include "calendarevent.h"
 #include "dndtextedit.h"
+#include "attachmentwidget.h"
 
 class ColorButton : public QPushButton {
     Q_OBJECT
@@ -90,8 +91,7 @@ private:
     QLabel* mEndLabel;
     QComboBox* mRepeat;
     RepeatWidget* mRepeatWidget;
-    QLabel* mIcon;
-    QLabel* mAttachment;
+    AttachmentWidget* mAttachment;
 
     QWidget* setUpRepeatCombo();
     QWidget* setUpDurationWidget();
