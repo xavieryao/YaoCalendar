@@ -106,11 +106,18 @@ void MainWindow::setUpCalendarNavigator() {
     connect(nextButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showNextMonth);
     connect(pinButton, &QPushButton::clicked, [=]{
 //        this->centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
+#ifdef Q_OS_OSX
+        MainWindow* mainWindow = new MainWindow;
+        mainWindow->setWindowFlags(mainWindow->windowFlags() | Qt::WindowTransparentForInput);
+        mainWindow->show();
+        this->close();
+#else
         Qt::WindowFlags flag = windowFlags();
-        flag = flag | Qt::WindowTransparentForInput;
+        flag = flag | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint;
         this->setWindowFlags(flag);
         show();
-//        this->setWindowOpacity(0.5);
+
+#endif
     });
 }
 
@@ -210,4 +217,8 @@ void MainWindow::openEventWindow(CalendarEvent event, bool newEvent) {
     dialog->setEvent(event, newEvent);
     connect(dialog, &EventDialog::confirmedEventChange, this, &MainWindow::onEventModified);
     dialog->exec();
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *e) {
+    qDebug() << "mouse move";
 }

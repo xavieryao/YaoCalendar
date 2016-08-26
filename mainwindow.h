@@ -27,6 +27,7 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *event);
+    void mousePressEvent(QMouseEvent *e);
 
 private:
     Ui::MainWindow *ui;

@@ -15,7 +15,6 @@ int main(int argc, char *argv[])
                       QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     a.installTranslator(&qtTranslator);
 
-
     QTranslator myTranslator;
     qDebug() << QLocale::system().name();
     myTranslator.load(":/translations/" + QLocale::system().name());
