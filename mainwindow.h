@@ -68,6 +68,7 @@ private slots:
     void onEventModified(CalendarEvent origEvent, CalendarEvent event, bool isNew);
     void openEventWindow(CalendarEvent event, bool newEvent = false);
     void onDeleteEvent(CalendarEvent& event);
+    void onUserChanged();
 };
 
 #endif // MAINWINDOW_H

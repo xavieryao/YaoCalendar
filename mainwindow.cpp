@@ -323,10 +323,16 @@ void MainWindow::configureMultiUser(QStringList& userList)
 {
     for (auto user : userList) {
         QAction* action = new QAction(user, this);
+        action->setData(user);
         ui->menuUser->addAction(action);
         qDebug() << "add";
     }
     ui->menuUser->addSeparator();
     QAction* addUser = new QAction(tr("&Add User"), this);
     ui->menuUser->addAction(addUser);
+}
+
+void MainWindow::onUserChanged()
+{
+//    for ()
 }
