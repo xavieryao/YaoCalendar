@@ -45,6 +45,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->calendarWidget->setEventMap(mEventMap);
     mSideBar->setEventMap(mEventMap);
 
+//    this->setWindowFlags(this->windowFlags() | Qt::WindowTransparentForInput);
+    this->setWindowOpacity(0.8);
+
     connect(ui->calendarWidget, &MyCalendarWidget::clicked, mSideBar, &SideBar::updateEventList);
     connect(mSideBar, &SideBar::editEvent, this, &MainWindow::openEventWindow);
 }
@@ -101,6 +104,14 @@ void MainWindow::setUpCalendarNavigator() {
     connect(todayButton, &QPushButton::clicked, [=]{ui->calendarWidget->showToday(); ui->calendarWidget->setSelectedDate(QDate::currentDate());});
     connect(prevButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showPreviousMonth);
     connect(nextButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showNextMonth);
+    connect(pinButton, &QPushButton::clicked, [=]{
+//        this->centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
+        Qt::WindowFlags flag = windowFlags();
+        flag = flag | Qt::WindowTransparentForInput;
+        this->setWindowFlags(flag);
+        show();
+//        this->setWindowOpacity(0.5);
+    });
 }
 
 void MainWindow::formatAndSetMonthLabel(int year, int month) {
