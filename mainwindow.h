@@ -75,6 +75,8 @@ private slots:
     void onUserChanged();
     void addUser();
     void editUser();
+    void exportEvents();
+    void importEvents();
 };
 
 #endif // MAINWINDOW_H

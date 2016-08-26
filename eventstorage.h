@@ -23,7 +23,7 @@ public:
     void createEvent(CalendarEvent e);
     EventMap* createEventMap();
     void loadFromFile();
-    void saveToFile();
+    void saveToFile(QString fileName = QString());
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 

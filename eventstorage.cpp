@@ -45,9 +45,12 @@ void EventStorage::loadFromFile() {
     read(loadDoc.object());
 }
 
-void EventStorage::saveToFile() {
-
-    QFile saveFile(QString("./%1_save.json").arg(mUserName));
+void EventStorage::saveToFile(QString fileName) {
+    QString name;
+    if (fileName == QString()) {
+        name = QString("./%1_save.json").arg(mUserName);
+    }
+    QFile saveFile(name);
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
         return;

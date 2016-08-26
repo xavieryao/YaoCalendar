@@ -349,6 +349,12 @@ void MainWindow::configureMultiUser(QStringList& userList)
     QAction* editUser = new QAction(tr("&Edit User"), this);
     connect(editUser, &QAction::triggered, this, &MainWindow::editUser);
     mMenuUser->addAction(editUser);
+
+    mMenuUser->addSeparator();
+    QAction* exportEvents = new QAction(tr("E&xport Events..."), this);
+    QAction* importEvents = new QAction(tr("&Import Events..."), this);
+    mMenuUser->addAction(exportEvents);
+    mMenuUser->addAction(importEvents);
 }
 
 void MainWindow::onUserChanged()
@@ -414,4 +420,14 @@ void MainWindow::editUser()
     mSettings->setValue("users", userList);
     mSettings->setValue("currentUser", userName);
     configureMultiUser(userList);
+}
+
+void MainWindow::exportEvents()
+{
+
+}
+
+void MainWindow::importEvents()
+{
+
 }
