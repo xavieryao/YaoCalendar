@@ -255,6 +255,7 @@ void MainWindow::showTrayIcon()
         mainWindow->resize(this->size());
         mainWindow->setSelection(ui->calendarWidget->selectedDate());
         mainWindow->show();
+        mainWindow->raise();
         this->close();
 #else
         trayIcon->hide();
@@ -265,6 +266,7 @@ void MainWindow::showTrayIcon()
 //        flag = flag | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint;
         this->setWindowFlags(flag);
         show();
+        raise();
 #endif
         trayIcon->deleteLater();
 
