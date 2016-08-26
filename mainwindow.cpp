@@ -62,16 +62,15 @@ void MainWindow::setUpCalendarNavigator() {
     connect(ui->calendarWidget, &MyCalendarWidget::newEvent, this,
             &MainWindow::onDateActivated);
     QWidget* toolBar = new QWidget(this);
+
+    QPushButton* pinButton = new QPushButton(this);
     QPushButton* prevButton = new QPushButton(this);
     QPushButton* todayButton = new QPushButton(tr("Today"), this);
     QPushButton* nextButton = new QPushButton(this);
 
-    todayButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    prevButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    nextButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-
     QHBoxLayout* toolBarLayout = new QHBoxLayout(this);
     toolBarLayout->setSpacing(2);
+    toolBarLayout->addWidget(pinButton);
     toolBarLayout->addWidget(prevButton);
     toolBarLayout->addWidget(todayButton);
     toolBarLayout->addWidget(nextButton);
@@ -92,6 +91,8 @@ void MainWindow::setUpCalendarNavigator() {
                            ui->calendarWidget->monthShown());
     QFont font;
     font.setFamily("FontAwesome");
+    pinButton->setFont(font);
+    pinButton->setText(QChar(0xf276));
     prevButton->setFont(font);
     prevButton->setText(QChar(0xf104));
     nextButton->setFont(font);
