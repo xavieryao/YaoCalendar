@@ -108,7 +108,11 @@ void MainWindow::setUpCalendarNavigator() {
 //        this->centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
 #ifdef Q_OS_OSX
         MainWindow* mainWindow = new MainWindow;
-        mainWindow->setWindowFlags(mainWindow->windowFlags() | Qt::WindowTransparentForInput);
+        mainWindow->setWindowFlags(mainWindow->windowFlags() | Qt::WindowTransparentForInput
+                                   | Qt::WindowStaysOnTopHint);
+        mainWindow->move(this->pos().x(), this->pos().y());
+        mainWindow->resize(this->size());
+        mainWindow->setSelection(ui->calendarWidget->selectedDate());
         mainWindow->show();
         this->close();
 #else
@@ -221,4 +225,9 @@ void MainWindow::openEventWindow(CalendarEvent event, bool newEvent) {
 
 void MainWindow::mousePressEvent(QMouseEvent *e) {
     qDebug() << "mouse move";
+}
+
+void MainWindow::setSelection(const QDate& date)
+{
+    ui->calendarWidget->setSelectedDate(date);
 }
