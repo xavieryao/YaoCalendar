@@ -394,6 +394,10 @@ void MainWindow::addUser()
 void MainWindow::editUser()
 {
     QString current = mSettings->value("currentUser").toString();
+    if (current == "default") {
+        QMessageBox::warning(this, tr("Can Not Modify Default"), tr("You cannnot modify the default user."));
+        return;
+    }
     QString userName = QInputDialog::getText(this, tr("Add User"), "New User Name:", QLineEdit::Normal,
                                              current);
     QStringList userList = mSettings->value("users").toStringList();
