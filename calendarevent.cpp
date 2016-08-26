@@ -142,6 +142,11 @@ void CalendarEvent::setAttachment(const QString &attachment)
     mAttachment = attachment;
 }
 
+void CalendarEvent::setId(long long id)
+{
+    mId = id;
+}
+
 long long CalendarEvent::id() const
 {
     return mId;

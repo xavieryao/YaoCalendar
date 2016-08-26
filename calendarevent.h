@@ -69,6 +69,8 @@ public:
     QString attachment() const;
     void setAttachment(const QString &attachment);
 
+    void setId(long long id);
+
 signals:
 
 public slots:

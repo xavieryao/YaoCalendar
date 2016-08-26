@@ -103,7 +103,13 @@ QString SideBar::formatDescription(CalendarEvent& e) const{
 void SideBar::showContextMenu(const QPoint &pos)
 {
     QMenu menu;
-    QAction action(tr("Delete"));
-    menu.addAction(&action);
+    QAction* action = new QAction(tr("Delete"), this);
+    menu.addAction(action);
+    connect(action, &QAction::triggered, [=]{
+        CalendarEvent e;
+        long long id = mList->selectedItems().first()->data(Qt::UserRole).toLongLong();
+        e.setId(id);
+        emit deleteEvent(e);
+    });
     menu.exec(this->mapToGlobal(pos));
 }
