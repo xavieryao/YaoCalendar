@@ -36,9 +36,8 @@ private:
     EventStorage* mEventStorage;
 
     void setUpCalendarNavigator();
-    QWidget* setUpToolBar();
 
-    static const int MIN_WIDTH_WITH_SIDEBAR = 600;
+    static const int MIN_WIDTH_WITH_SIDEBAR = 590;
     static const int SIDE_BAR_WIDTH = 240;
     const QString SAVE_FILE_NAME = "./save.json";
 

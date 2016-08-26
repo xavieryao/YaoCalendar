@@ -7,6 +7,6 @@
         <file alias="global">res/style.qss</file>
     </qresource>
     <qresource prefix="/icon">
-        <file alias="pin">res/pin.png</file>
+        <file>res/pin.png</file>
     </qresource>
 </RCC>
