@@ -30,9 +30,33 @@ void GlobalConfig::save()
         arr.append(user);
     }
     obj["users"] = arr;
+    QJsonDocument doc(obj);
+
+    QFile saveFile("config.json");
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning("Couldn't open config file.");
+        return;
+    }
+    saveFile.write(doc.toJson());
+    saveFile.close();
 }
 
 void GlobalConfig::load()
 {
+    QFile saveFile("config.json");
+    if (!saveFile.open(QIODevice::ReadOnly)) {
+        qWarning("Couldn't open config file.");
+        return;
+    }
+
+    QByteArray saveData = saveFile.readAll();
+    saveFile.close();
+
+    QJsonDocument loadDoc = QJsonDocument::fromJson(saveData);
+    QJsonArray userArr = loadDoc.object()["users"].toArray();
+    mUserList.clear();
+    for (auto val : userArr) {
+        mUserList.append(val.toString());
+    }
 
 }
