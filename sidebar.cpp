@@ -28,16 +28,33 @@ void SideBar::updateEventList(const QDate &date) {
         CalendarEvent event = eventList.at(i);
         QListWidgetItem* item = new QListWidgetItem();
         QWidget *itemWidget = new QWidget(this);
+        QWidget *title = new QWidget(this);
+        QHBoxLayout *titleLayout = new QHBoxLayout(this);
+        title->setLayout(titleLayout);
+
+        QLabel* color = new QLabel(itemWidget);
         QLabel* textLabel = new QLabel(itemWidget);
         QLabel* detailLabel = new QLabel(itemWidget);
+        textLabel->setAlignment(Qt::AlignLeft);
         detailLabel->setWordWrap(true);
+
+        titleLayout->addWidget(color);
+        titleLayout->addWidget(textLabel);
+        QFont font;
+        font.setFamily("FontAwesome");
+        color->setFont(font);
+        color->setStyleSheet(QString("color:rgb(%1,%2,%3)").arg(event.color().red())
+                             .arg(event.color().green())
+                             .arg(event.color().blue()));
+        color->setText(QChar(0xf0c8));
+
 
         textLabel->setText(QString("<b>%1</b>").arg(event.eventName()));
         detailLabel->setText(formatDescription(event));
         item->setWhatsThis(event.detail());
 
         QVBoxLayout* itemLayout = new QVBoxLayout(itemWidget);
-        itemLayout->addWidget(textLabel);
+        itemLayout->addWidget(title);
         itemLayout->addWidget(detailLabel);
 
         QFrame* line = new QFrame();
