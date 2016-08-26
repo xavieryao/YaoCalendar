@@ -41,3 +41,5 @@ DISTFILES +=
 
 RESOURCES += \
     res.qrc
+
+TRANSLATIONS += yaocalendar_zh_CN.ts yaocalendar_en.ts
