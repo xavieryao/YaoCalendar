@@ -3,3 +3,8 @@ QLabel
 font-family:nevis;
 font-size:36px;
 }
+
+QPushButton
+{
+min-width:20px
+}

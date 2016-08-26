@@ -61,12 +61,30 @@ void MainWindow::setUpCalendarNavigator() {
             &MainWindow::formatAndSetMonthLabel);
     connect(ui->calendarWidget, &MyCalendarWidget::newEvent, this,
             &MainWindow::onDateActivated);
+    QWidget* toolBar = new QWidget(this);
+    QPushButton* prevButton = new QPushButton(this);
+    QPushButton* todayButton = new QPushButton(tr("Today"), this);
+    QPushButton* nextButton = new QPushButton(this);
+
+    todayButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    prevButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+    nextButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+    QHBoxLayout* toolBarLayout = new QHBoxLayout(this);
+    toolBarLayout->setSpacing(2);
+    toolBarLayout->addWidget(prevButton);
+    toolBarLayout->addWidget(todayButton);
+    toolBarLayout->addWidget(nextButton);
+
+    toolBar->setLayout(toolBarLayout);
+    ui->horizontalLayout->addWidget(toolBar);
 
     QFile qssFile(":/stylesheet/global");
     qssFile.open(QFile::ReadOnly);
     if (qssFile.isOpen()) {
         QString qss = QString(qssFile.readAll());
         ui->monthLabel->setStyleSheet(qss);
+        toolBar->setStyleSheet(qss);
         qssFile.close();
     }
 
@@ -74,14 +92,14 @@ void MainWindow::setUpCalendarNavigator() {
                            ui->calendarWidget->monthShown());
     QFont font;
     font.setFamily("FontAwesome");
-    ui->prevButton->setFont(font);
-    ui->prevButton->setText(QChar(0xf104));
-    ui->nextButton->setFont(font);
-    ui->nextButton->setText(QChar(0xf105));
+    prevButton->setFont(font);
+    prevButton->setText(QChar(0xf104));
+    nextButton->setFont(font);
+    nextButton->setText(QChar(0xf105));
 
-    connect(ui->prevButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showPreviousMonth);
-    connect(ui->nextButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showNextMonth);
-    connect(ui->todayButton, &QPushButton::clicked, [=]{ui->calendarWidget->showToday(); ui->calendarWidget->setSelectedDate(QDate::currentDate());});
+    connect(todayButton, &QPushButton::clicked, [=]{ui->calendarWidget->showToday(); ui->calendarWidget->setSelectedDate(QDate::currentDate());});
+    connect(prevButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showPreviousMonth);
+    connect(nextButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showNextMonth);
 }
 
 void MainWindow::formatAndSetMonthLabel(int year, int month) {
