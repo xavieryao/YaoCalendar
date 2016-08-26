@@ -325,9 +325,10 @@ void MainWindow::configureMultiUser(QStringList& userList)
         return;
     }
 #endif
-
-    QMenu* menuUser = menuBar()->addMenu(tr("&User"));
-    QString currentUser = QSettings.value("currentUser");
+    QMenuBar* bar = new QMenuBar(this);
+    setMenuBar(bar);
+    mMenuUser = menuBar()->addMenu(tr("&User"));
+    QString currentUser = mSettings->value("currentUser").toString();
     for (auto user : userList) {
         QAction* action = new QAction(user, this);
         action->setData(user);
@@ -335,13 +336,19 @@ void MainWindow::configureMultiUser(QStringList& userList)
         if (user == currentUser) {
             action->setChecked(true);
         }
-        menuUser->addAction(action);
+        connect(action, &QAction::triggered, this, &MainWindow::onUserChanged);
+        mMenuUser->addAction(action);
 
         qDebug() << "add";
     }
-    menuUser->addSeparator();
+    mMenuUser->addSeparator();
     QAction* addUser = new QAction(tr("&Add User"), this);
-    menuUser->addAction(addUser);
+    connect(addUser, &QAction::triggered, this, &MainWindow::addUser);
+    mMenuUser->addAction(addUser);
+
+    QAction* editUser = new QAction(tr("&Edit User"), this);
+    connect(editUser, &QAction::triggered, this, &MainWindow::editUser);
+    mMenuUser->addAction(editUser);
 }
 
 void MainWindow::onUserChanged()
@@ -349,10 +356,12 @@ void MainWindow::onUserChanged()
     QAction* action = qobject_cast<QAction*>(sender());
     action->setChecked(true);
     QString currentUser = action->data().toString();
-    QList<QAction* >actions = menuBar()->actions();
+    qDebug() << "change to " <<  currentUser;
+
+    QList<QAction* >actions = mMenuUser->actions();
     for (auto act : actions) {
-        if (act != action) {
-            action->setChecked(false);
+        if (action != act) {
+            act->setChecked(false);
         }
     }
 
@@ -363,6 +372,42 @@ void MainWindow::onUserChanged()
     mEventStorage->setUserName(currentUser);
     mEventStorage->loadFromFile();
     mEventMap = mEventStorage->createEventMap();
+    ui->calendarWidget->setEventMap(mEventMap);
     ui->calendarWidget->update();
+    mSideBar->setEventMap(mEventMap);
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
+}
+
+void MainWindow::addUser()
+{
+    QString userName = QInputDialog::getText(this, tr("Add User"), "New User Name:");
+    QStringList userList = mSettings->value("users").toStringList();
+    if (userList.contains(userName)) {
+        QMessageBox::warning(this, tr("Naming Collision"), tr("There is already a user with the same name."));
+        return;
+    }
+    userList.append(userName);
+    mSettings->setValue("users", userList);
+    configureMultiUser(userList);
+}
+
+void MainWindow::editUser()
+{
+    QString current = mSettings->value("currentUser").toString();
+    QString userName = QInputDialog::getText(this, tr("Add User"), "New User Name:", QLineEdit::Normal,
+                                             current);
+    QStringList userList = mSettings->value("users").toStringList();
+    if (userName == current) {
+        return;
+    }
+    if (userList.contains(userName)) {
+        QMessageBox::warning(this, tr("Naming Collision"), tr("There is already a user with the same name."));
+        return;
+    }
+
+    userList.removeAll(current);
+    userList.append(userName);
+    mSettings->setValue("users", userList);
+    mSettings->setValue("currentUser", userName);
+    configureMultiUser(userList);
 }

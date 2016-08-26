@@ -6,6 +6,7 @@
 #include <QFontDatabase>
 #include <QMap>
 #include <QDate>
+#include <QInputDialog>
 #include "mycalendarwidget.h"
 #include "sidebar.h"
 #include "eventmap.h"
@@ -15,6 +16,7 @@
 #include <QFont>
 #include <QResizeEvent>
 #include <QTime>
+#include <QMessageBox>
 #include <QFile>
 #include <QMessageBox>
 #include <QAbstractButton>
@@ -53,6 +55,8 @@ private:
     EventStorage* mEventStorage;
     QSettings* mSettings;
 
+    QMenu* mMenuUser;
+
     void setUpCalendarNavigator();
     void configureMultiUser(QStringList& userList);
 
@@ -69,6 +73,8 @@ private slots:
     void openEventWindow(CalendarEvent event, bool newEvent = false);
     void onDeleteEvent(CalendarEvent& event);
     void onUserChanged();
+    void addUser();
+    void editUser();
 };
 
 #endif // MAINWINDOW_H
