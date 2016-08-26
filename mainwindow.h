@@ -16,6 +16,8 @@
 #include <QFont>
 #include <QResizeEvent>
 #include <QTime>
+#include <QFileDialog>
+#include <QStandardPaths>
 #include <QMessageBox>
 #include <QFile>
 #include <QMessageBox>

@@ -46,7 +46,7 @@ void EventStorage::loadFromFile() {
 }
 
 void EventStorage::saveToFile(QString fileName) {
-    QString name;
+    QString name = fileName;
     if (fileName == QString()) {
         name = QString("./%1_save.json").arg(mUserName);
     }

@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) :
     ui->calendarWidget->setEventMap(mEventMap);
     mSideBar->setEventMap(mEventMap);
 
-//    this->setWindowFlags(this->windowFlags() | Qt::WindowTransparentForInput);
+    //    this->setWindowFlags(this->windowFlags() | Qt::WindowTransparentForInput);
 
     connect(ui->calendarWidget, &MyCalendarWidget::clicked, mSideBar, &SideBar::updateEventList);
     connect(mSideBar, &SideBar::editEvent, this, &MainWindow::openEventWindow);
@@ -109,7 +109,7 @@ void MainWindow::setUpCalendarNavigator() {
     connect(prevButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showPreviousMonth);
     connect(nextButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showNextMonth);
     connect(pinButton, &QPushButton::clicked, [=]{
-//        this->centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
+        //        this->centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
         this->setWindowOpacity(0.8);
 #ifdef Q_OS_OSX
         MainWindow* mainWindow = new MainWindow(0, Qt::WindowTransparentForInput
@@ -259,7 +259,7 @@ void MainWindow::showTrayIcon()
         flag = flag & !Qt::WindowTransparentForInput;
         flag = flag & !Qt::WindowStaysOnTopHint;
         flag = flag & !Qt::FramelessWindowHint;
-//        flag = flag | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint;
+        //        flag = flag | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint;
         this->setWindowFlags(flag);
         show();
         raise();
@@ -353,6 +353,9 @@ void MainWindow::configureMultiUser(QStringList& userList)
     mMenuUser->addSeparator();
     QAction* exportEvents = new QAction(tr("E&xport Events..."), this);
     QAction* importEvents = new QAction(tr("&Import Events..."), this);
+    connect(exportEvents, &QAction::triggered, this, &MainWindow::exportEvents);
+    connect(importEvents, &QAction::triggered, this, &MainWindow::importEvents);
+
     mMenuUser->addAction(exportEvents);
     mMenuUser->addAction(importEvents);
 }
@@ -424,7 +427,14 @@ void MainWindow::editUser()
 
 void MainWindow::exportEvents()
 {
-
+    QString saveFile = QFileDialog::getSaveFileName(this, tr("Export to..."),
+                         QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+"/exported.json",
+                         "JSON (*.json)");
+    qDebug() << saveFile;
+    if (saveFile.isEmpty()) {
+        return;
+    }
+    mEventStorage->saveToFile(saveFile);
 }
 
 void MainWindow::importEvents()
