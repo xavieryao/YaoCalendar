@@ -17,5 +17,6 @@ void DnDTextEdit::dragEnterEvent(QDragEnterEvent *e)
 
 void DnDTextEdit::dropEvent(QDropEvent *e)
 {
+    e->acceptProposedAction();
     emit fileDropped(e->mimeData()->urls().first());
 }

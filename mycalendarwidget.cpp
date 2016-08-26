@@ -5,6 +5,9 @@
 #include <QColor>
 #include <QPainter>
 #include <QPoint>
+#include <QUrl>
+#include <QDate>
+#include <QMimeData>
 #include <QPainterPath>
 
 MyCalendarWidget::MyCalendarWidget(QWidget* parent) : QCalendarWidget(parent)
@@ -23,10 +26,13 @@ MyCalendarWidget::MyCalendarWidget(QWidget* parent) : QCalendarWidget(parent)
     this->setWeekdayTextFormat(Qt::DayOfWeek::Saturday, weekendFormat);
     this->setWeekdayTextFormat(Qt::DayOfWeek::Sunday, weekendFormat);
     this->setVerticalHeaderFormat(MyCalendarWidget::NoVerticalHeader);
+
+    setAcceptDrops(true);
 }
 
 void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDate &date) const
 {
+    (const_cast<MyCalendarWidget *>(this))->mRectDateList.append(QPair<QRect, QDate>(rect, date));
     // Draw cell background
     painter->save();
     QBrush backgroundBrush(Qt::SolidPattern);
@@ -84,4 +90,33 @@ void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDa
     painter->setBackgroundMode(Qt::BGMode::TransparentMode);
     painter->drawText(rect, Qt::AlignHCenter, QString::number(date.day()));
     painter->restore();
+}
+
+void MyCalendarWidget::dragEnterEvent(QDragEnterEvent *e)
+{
+
+    if (e->mimeData()->hasUrls() && e->mimeData()->urls().size() == 1) {
+        e->acceptProposedAction();
+    }
+
+}
+
+void MyCalendarWidget::dropEvent(QDropEvent *e)
+{
+    QDate date;
+    for (auto rect: mRectDateList) {
+        if (rect.first.contains(e->pos())) {
+            date = rect.second;
+        }
+    }
+    if (date == QDate()) {
+        return;
+    }
+    e->acceptProposedAction();
+    qDebug() << "drop on " << date;
+}
+
+void MyCalendarWidget::resizeEvent(QResizeEvent *event)
+{
+    mRectDateList.clear();
 }

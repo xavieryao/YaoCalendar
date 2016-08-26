@@ -2,6 +2,11 @@
 #define MYCALENDARWIDGET_H
 
 #include <QCalendarWidget>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMap>
+#include <QRect>
+#include <QPair>
 #include "eventmap.h"
 
 class MyCalendarWidget : public QCalendarWidget
@@ -12,9 +17,13 @@ public:
 
 protected:
     virtual void paintCell(QPainter * painter, const QRect & rect, const QDate & date) const;
+    virtual void dragEnterEvent(QDragEnterEvent* e);
+    virtual void dropEvent(QDropEvent *e);
+    virtual void resizeEvent(QResizeEvent *event);
 
 private:
     EventMap* mEventMap = NULL;
+    QList<QPair<QRect, QDate> > mRectDateList;
 };
 
 #endif // MYCALENDARWIDGET_H

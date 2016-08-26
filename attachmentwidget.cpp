@@ -38,9 +38,6 @@ void AttachmentWidget::setFile(const QString filename) {
 
 void AttachmentWidget::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << "mouse press";
-    qDebug() << "left?" << (event->button() == Qt::LeftButton);
-    qDebug() << this->geometry();
     if (event->button() == Qt::LeftButton) {
         qDebug() << "drag!";
         QDrag *drag = new QDrag(this);
@@ -54,6 +51,6 @@ void AttachmentWidget::mousePressEvent(QMouseEvent *event)
         drag->setMimeData(mimeData);
         drag->setPixmap(mIconPixmap);
 
-        Qt::DropAction dropAction = drag->exec();
+        drag->exec();
     }
 }
