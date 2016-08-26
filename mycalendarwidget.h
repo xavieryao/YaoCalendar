@@ -11,6 +11,7 @@
 
 class MyCalendarWidget : public QCalendarWidget
 {
+    Q_OBJECT
 public:
     explicit MyCalendarWidget(QWidget* parent = 0);
     void setEventMap(EventMap* map) {mEventMap = map;}
@@ -24,6 +25,9 @@ protected:
 private:
     EventMap* mEventMap = NULL;
     QList<QPair<QRect, QDate> > mRectDateList;
+
+signals:
+    void newEvent(const QDate& date, QString file = QString());
 };
 
 #endif // MYCALENDARWIDGET_H

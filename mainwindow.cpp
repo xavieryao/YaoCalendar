@@ -10,6 +10,7 @@
 #include <QAbstractButton>
 #include <QDir>
 #include <QJsonDocument>
+#include <QFileInfo>
 #include "eventdialog.h"
 #include "eventmaphelper.h"
 
@@ -58,7 +59,7 @@ MainWindow::~MainWindow()
 void MainWindow::setUpCalendarNavigator() {
     connect(ui->calendarWidget, &MyCalendarWidget::currentPageChanged, this,
             &MainWindow::formatAndSetMonthLabel);
-    connect(ui->calendarWidget, &MyCalendarWidget::activated, this,
+    connect(ui->calendarWidget, &MyCalendarWidget::newEvent, this,
             &MainWindow::onDateActivated);
 
     QFile qssFile(":/stylesheet/global");
@@ -92,7 +93,7 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
     mSideBar->setVisible(event->size().width() >= MIN_WIDTH_WITH_SIDEBAR);
 }
 
-void MainWindow::onDateActivated(const QDate &date) {
+void MainWindow::onDateActivated(const QDate &date, QString file) {
     // new event
     CalendarEvent event = CalendarEvent::newInstance();
     QDateTime startTime, endTime;
@@ -104,6 +105,12 @@ void MainWindow::onDateActivated(const QDate &date) {
     endTime.setTime(currentTime.addSecs(60*120));
     event.setStartTime(startTime);
     event.setEndTime(endTime);
+    event.setAttachment(file);
+
+    if (file != QString()) {
+        QFileInfo info(file);
+        event.setEventName(info.fileName());
+    }
 
     openEventWindow(event, true);
 

@@ -28,6 +28,8 @@ MyCalendarWidget::MyCalendarWidget(QWidget* parent) : QCalendarWidget(parent)
     this->setVerticalHeaderFormat(MyCalendarWidget::NoVerticalHeader);
 
     setAcceptDrops(true);
+
+    connect(this, &QCalendarWidget::activated, [=](const QDate& date){emit newEvent(date);});
 }
 
 void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDate &date) const
@@ -114,6 +116,7 @@ void MyCalendarWidget::dropEvent(QDropEvent *e)
     }
     e->acceptProposedAction();
     qDebug() << "drop on " << date;
+    emit newEvent(date, e->mimeData()->urls().first().toLocalFile());
 }
 
 void MyCalendarWidget::resizeEvent(QResizeEvent *event)

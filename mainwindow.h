@@ -45,7 +45,7 @@ public slots:
 
 private slots:
     void formatAndSetMonthLabel(int year, int month);
-    void onDateActivated(const QDate &date);
+    void onDateActivated(const QDate &date, QString file);
     void onEventModified(CalendarEvent origEvent, CalendarEvent event, bool isNew);
     void openEventWindow(CalendarEvent event, bool newEvent = false);
 
