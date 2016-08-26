@@ -18,6 +18,7 @@ public:
         mEventMap = map;
     }
 
+
 signals:
     void editEvent(CalendarEvent event, bool isNew = false);
 
@@ -25,6 +26,8 @@ public slots:
     void updateEventList(const QDate &date);
 private:
     EventMap* mEventMap;
+
+    QString formatDescription(CalendarEvent& e) const;
 
     QTextBrowser* mTextBrowser;
     QListWidget* mList;

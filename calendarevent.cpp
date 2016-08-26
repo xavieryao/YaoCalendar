@@ -129,6 +129,7 @@ void CalendarEvent::read(const QJsonObject &json) {
     mAttachment = json["attachment"].toString();
 }
 
+
 // Auto-generated getter and setter member functions,
 
 QString CalendarEvent::attachment() const

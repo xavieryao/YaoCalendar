@@ -51,6 +51,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->calendarWidget, &MyCalendarWidget::clicked, mSideBar, &SideBar::updateEventList);
     connect(mSideBar, &SideBar::editEvent, this, &MainWindow::openEventWindow);
+
+    mSideBar->updateEventList(ui->calendarWidget->selectedDate());
 }
 
 MainWindow::~MainWindow()

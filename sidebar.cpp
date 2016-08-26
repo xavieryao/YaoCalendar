@@ -33,9 +33,7 @@ void SideBar::updateEventList(const QDate &date) {
         detailLabel->setWordWrap(true);
 
         textLabel->setText(QString("<b>%1</b>").arg(event.eventName()));
-        detailLabel->setText(tr("From:%1<br />To:%2<br />%3")
-                           .arg(event.startDateTime().toString())
-                           .arg(event.endDateTime().toString(), event.location()));
+        detailLabel->setText(formatDescription(event));
         item->setWhatsThis(event.detail());
 
         QVBoxLayout* itemLayout = new QVBoxLayout(itemWidget);
@@ -58,4 +56,19 @@ void SideBar::updateEventList(const QDate &date) {
 void SideBar::eventActivated(QListWidgetItem *item) {
     CalendarEvent e = item->data(Qt::UserRole).value<CalendarEvent>();
     emit editEvent(e);
+}
+
+
+QString SideBar::formatDescription(CalendarEvent& e) const{
+    if (e.isAllDayEvent()) {
+        QString formatAllDay = tr("All Day<br /><u>From:</u>%1<br /><u>To:</u>%2<br />%3");
+        return formatAllDay.arg(e.startDateTime().date().toString())
+                .arg(e.endDateTime().date().toString())
+                .arg(e.location());
+    }
+    QString formatDefault = tr("<u>From:</u>%1<br /><u>To:</u>%2<br />%3");
+
+    return formatDefault.arg(e.startDateTime().toString())
+            .arg(e.endDateTime().toString())
+            .arg(e.location());
 }
