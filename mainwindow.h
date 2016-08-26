@@ -24,6 +24,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void setSelection(const QDate& date);
+    void showTrayIcon();
 
 protected:
     void resizeEvent(QResizeEvent *event);

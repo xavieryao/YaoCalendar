@@ -11,6 +11,8 @@
 #include <QDir>
 #include <QJsonDocument>
 #include <QFileInfo>
+#include <QMenu>
+#include <QSystemTrayIcon>
 #include "eventdialog.h"
 #include "eventmaphelper.h"
 
@@ -46,7 +48,6 @@ MainWindow::MainWindow(QWidget *parent) :
     mSideBar->setEventMap(mEventMap);
 
 //    this->setWindowFlags(this->windowFlags() | Qt::WindowTransparentForInput);
-    this->setWindowOpacity(0.8);
 
     connect(ui->calendarWidget, &MyCalendarWidget::clicked, mSideBar, &SideBar::updateEventList);
     connect(mSideBar, &SideBar::editEvent, this, &MainWindow::openEventWindow);
@@ -106,6 +107,7 @@ void MainWindow::setUpCalendarNavigator() {
     connect(nextButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showNextMonth);
     connect(pinButton, &QPushButton::clicked, [=]{
 //        this->centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
+        this->setWindowOpacity(0.8);
 #ifdef Q_OS_OSX
         MainWindow* mainWindow = new MainWindow;
         mainWindow->setWindowFlags(mainWindow->windowFlags() | Qt::WindowTransparentForInput
@@ -113,14 +115,16 @@ void MainWindow::setUpCalendarNavigator() {
         mainWindow->move(this->pos().x(), this->pos().y());
         mainWindow->resize(this->size());
         mainWindow->setSelection(ui->calendarWidget->selectedDate());
+        mainWindow->setWindowOpacity(0.8);
         mainWindow->show();
+        mainWindow->showTrayIcon();
         this->close();
 #else
         Qt::WindowFlags flag = windowFlags();
         flag = flag | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint;
         this->setWindowFlags(flag);
         show();
-
+        showTrayIcon();
 #endif
     });
 }
@@ -230,4 +234,36 @@ void MainWindow::mousePressEvent(QMouseEvent *e) {
 void MainWindow::setSelection(const QDate& date)
 {
     ui->calendarWidget->setSelectedDate(date);
+}
+
+void MainWindow::showTrayIcon()
+{
+    QSystemTrayIcon* trayIcon = new QSystemTrayIcon(this);
+    trayIcon->setIcon(QIcon(":/icon/pin"));
+    QMenu* menu = new QMenu(this);
+    QAction* showAction = new QAction(tr("&Unpin"),this);
+    menu->addAction(showAction);
+    trayIcon->setContextMenu(menu);
+    trayIcon->show();
+    connect(showAction, &QAction::triggered, [=]{
+#ifdef Q_OS_OSX
+        MainWindow* mainWindow = new MainWindow;
+        mainWindow->move(this->pos().x(), this->pos().y());
+        mainWindow->resize(this->size());
+        mainWindow->setSelection(ui->calendarWidget->selectedDate());
+        mainWindow->show();
+        this->close();
+#else
+        trayIcon->hide();
+        setWindowOpacity(1);
+        Qt::WindowFlags flag = windowFlags();
+        flag = flag & !Qt::WindowTransparentForInput;
+        flag = flag & !Qt::WindowStaysOnTopHint;
+//        flag = flag | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint;
+        this->setWindowFlags(flag);
+        show();
+#endif
+        trayIcon->deleteLater();
+
+    });
 }

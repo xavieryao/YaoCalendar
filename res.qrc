@@ -7,7 +7,7 @@
         <file alias="global">res/style.qss</file>
     </qresource>
     <qresource prefix="/icon">
-        <file>res/pin.png</file>
+        <file alias="pin">res/pin.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file alias="zh_CN">yaocalendar_zh_CN.qm</file>
