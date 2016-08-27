@@ -110,27 +110,7 @@ void MainWindow::setUpCalendarNavigator() {
     connect(todayButton, &QPushButton::clicked, [=]{ui->calendarWidget->showToday(); ui->calendarWidget->setSelectedDate(QDate::currentDate());});
     connect(prevButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showPreviousMonth);
     connect(nextButton, &QPushButton::clicked, ui->calendarWidget, &MyCalendarWidget::showNextMonth);
-    connect(pinButton, &QPushButton::clicked, [=]{
-        //        this->centralWidget()->setAttribute(Qt::WA_TransparentForMouseEvents);
-        this->setWindowOpacity(0.8);
-#ifdef Q_OS_OSX
-        MainWindow* mainWindow = new MainWindow(0, Qt::WindowTransparentForInput
-                                                | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
-        mainWindow->move(this->pos().x(), this->pos().y());
-        mainWindow->resize(this->size());
-        mainWindow->setSelection(ui->calendarWidget->selectedDate());
-        mainWindow->setWindowOpacity(0.8);
-        mainWindow->show();
-        mainWindow->showTrayIcon();
-        this->close();
-#else
-        Qt::WindowFlags flag = windowFlags();
-        flag = flag | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint;
-        this->setWindowFlags(flag);
-        show();
-        showTrayIcon();
-#endif
-    });
+    connect(pinButton, &QPushButton::clicked, this, &MainWindow::onPin);
 }
 
 void MainWindow::formatAndSetMonthLabel(int year, int month) {
@@ -482,15 +462,12 @@ void MainWindow::importEvents()
 void MainWindow::configureShortcuts()
 {
     QMap<QString, QVariant> map = mSettings->value("shortcuts").toMap();
-    // DEBUG
-    map.insert("Ctrl+O", QVariant::fromValue(ShortcutActions::DELETE));
-    map.insert("Ctrl+P", QVariant::fromValue(ShortcutActions::NEW));
 
     QList<QString> keys = map.keys();
     for(int i = 0; i < keys.size(); i++) {
         QString key = keys.at(i);
         ShortcutActions action = map.value(key).value<ShortcutActions>();
-            QShortcut* shortcut = new QShortcut(QKeySequence(key), this);
+            QShortcut* shortcut = new QShortcut(QKeySequence(key, QKeySequence::PortableText), this);
         switch (action) {
         case ShortcutActions::NEW:
             qDebug() << "new shortcut";
@@ -507,12 +484,47 @@ void MainWindow::configureShortcuts()
                 }
             });
             break;
+        case ShortcutActions::NEXT_MONTH:
+            connect(shortcut, &QShortcut::activated, ui->calendarWidget, &MyCalendarWidget::showNextMonth);
+            break;
+        case ShortcutActions::PREV_MONTH:
+            connect(shortcut, &QShortcut::activated, ui->calendarWidget, &MyCalendarWidget::showPreviousMonth);
+            break;
+        case ShortcutActions::TODAY:
+            connect(shortcut, &QShortcut::activated, [=]{
+                ui->calendarWidget->showToday();
+                ui->calendarWidget->setSelectedDate(QDate::currentDate());
+                mSideBar->updateEventList(ui->calendarWidget->selectedDate());
+            });
+            break;
+        case ShortcutActions::PIN:
+            connect(shortcut, &QShortcut::activated, this, &MainWindow::onPin);
+            break;
         default:
-
             break;
         }
     }
-
-
-
 }
+
+void MainWindow::onPin()
+{
+    this->setWindowOpacity(0.8);
+#ifdef Q_OS_OSX
+    MainWindow* mainWindow = new MainWindow(0, Qt::WindowTransparentForInput
+                                            | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+    mainWindow->move(this->pos().x(), this->pos().y());
+    mainWindow->resize(this->size());
+    mainWindow->setSelection(ui->calendarWidget->selectedDate());
+    mainWindow->setWindowOpacity(0.8);
+    mainWindow->show();
+    mainWindow->showTrayIcon();
+    this->close();
+#else
+    Qt::WindowFlags flag = windowFlags();
+    flag = flag | Qt::WindowTransparentForInput | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint;
+    this->setWindowFlags(flag);
+    show();
+    showTrayIcon();
+#endif
+}
+

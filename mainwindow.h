@@ -39,7 +39,7 @@ class MainWindow;
 }
 
 enum ShortcutActions {
-    NEW, DELETE
+    NEW, DELETE, NEXT_MONTH, PREV_MONTH, TODAY, PIN
 };
 
 Q_DECLARE_METATYPE(ShortcutActions)
@@ -88,6 +88,7 @@ private slots:
     void editUser();
     void exportEvents();
     void importEvents();
+    void onPin();
 };
 
 #endif // MAINWINDOW_H
