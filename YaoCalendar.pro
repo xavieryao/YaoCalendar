@@ -23,6 +23,7 @@ SOURCES += main.cpp\
     dndtextedit.cpp \
     attachmentwidget.cpp \
     wavewidget.cpp \
+    qtfilecopier.cpp \
     copyhelper.cpp
 
 HEADERS  += mainwindow.h \
@@ -37,6 +38,7 @@ HEADERS  += mainwindow.h \
     dndtextedit.h \
     attachmentwidget.h \
     wavewidget.h \
+    qtfilecopier.h \
     copyhelper.h
 
 FORMS    += mainwindow.ui

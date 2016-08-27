@@ -2,25 +2,17 @@
 #define COPYHELPER_H
 
 #include <QString>
-#include "wavewidget.h"
+#include "calendarevent.h"
 
-class CopyHelper : public QObject
+class CopyHelper
 {
-    Q_OBJECT
 public:
-    CopyHelper(QObject* parent = 0);
-    QString store(const QString& source, const QString& fileName);
-    void get(const QString& dest, const QString& from);
-
-private slots:
-
-    void progressed(long, qint64);
-    void done();
+    CopyHelper();
+    QString static store(const QString& source, const QString& fileName);
+    void static get(const QString& dest, const QString& from);
 
 private:
-    QString randStr(int digits = 6);
-    qint64 full;
-    WaveWidget* wave;
+    static QString randStr(int digits = 6);
 };
 
 #endif // COPYHELPER_H
