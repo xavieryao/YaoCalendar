@@ -42,7 +42,25 @@ QString CopyHelper::store(const QString& source, const QString& fileName)
 
 void CopyHelper::get(const QString& dest, const QString& from)
 {
+    QtFileCopier* copier = new QtFileCopier();
+    copier->setProgressInterval(1);
 
+    WaveWidget* wave = new WaveWidget;
+    wave->show();
+
+    qreal length = QFile(from).size();
+
+    connect(copier, &QtFileCopier::dataTransferProgress, [wave, length](long id, qint64 pro){
+        wave->setProgress(pro/length);
+    });
+
+    connect(copier, &QtFileCopier::done, [copier, wave]{
+        wave->close();
+        wave->deleteLater();
+        copier->deleteLater();
+    });
+
+    copier->copy(from, dest);
 }
 
 QString CopyHelper::randStr(int digits)

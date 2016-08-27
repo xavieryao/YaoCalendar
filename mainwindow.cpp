@@ -365,6 +365,16 @@ void MainWindow::configureMultiUser(QStringList& userList)
 
     mMenuUser->addAction(exportEvents);
     mMenuUser->addAction(importEvents);
+
+    // configure settigns menu
+    QMenu* settings = menuBar()->addMenu(tr("&Preferences"));
+    QAction* droppable = new QAction(tr("Drop File"), this);
+    droppable->setCheckable(true);
+    droppable->setChecked(mSettings->value("droppable", true).toBool());
+    connect(droppable, &QAction::triggered, [=]{
+        mSettings->setValue("droppable", droppable->isChecked());
+    });
+    settings->addAction(droppable);
 }
 
 void MainWindow::onUserChanged()

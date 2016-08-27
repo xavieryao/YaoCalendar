@@ -5,6 +5,7 @@
 #include <QColor>
 #include <QPainter>
 #include <QPoint>
+#include <QSettings>
 #include <QUrl>
 #include <QDate>
 #include <QMimeData>
@@ -96,8 +97,9 @@ void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDa
 
 void MyCalendarWidget::dragEnterEvent(QDragEnterEvent *e)
 {
-
-    if (e->mimeData()->hasUrls() && e->mimeData()->urls().size() == 1) {
+    QSettings settings("./config.plist", QSettings::IniFormat,
+                                  this);
+    if (e->mimeData()->hasUrls() && e->mimeData()->urls().size() == 1 && settings.value("droppable", true).toBool()) {
         e->acceptProposedAction();
     }
 
