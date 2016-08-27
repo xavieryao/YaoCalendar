@@ -363,6 +363,9 @@ void MainWindow::configureMenu(QStringList& userList)
     QAction* shorts = new QAction(tr("Shortcuts..."), this);
     connect(shorts, &QAction::triggered, [=]{
         ShortcutDialog* diag = new ShortcutDialog(this);
+        connect(diag, &ShortcutDialog::finished, [=]{
+            configureShortcuts();
+        });
         diag->exec();
     });
     settings->addAction(shorts);

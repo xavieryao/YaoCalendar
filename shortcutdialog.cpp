@@ -15,6 +15,8 @@ ShortcutDialog::ShortcutDialog(QWidget* parent) : QDialog(parent)
 {
     setWindowTitle(tr("Shortcuts"));
     QTableWidget* table = new QTableWidget(this);
+    table->setHorizontalHeaderItem(0, new QTableWidgetItem(tr("Shortcut")));
+
     setUpTable(table);
 
     QVBoxLayout* root = new QVBoxLayout(this);
@@ -109,6 +111,7 @@ void ShortcutDialog::setUpTable(QTableWidget* table)
         table->setItem(i, 0, item1);
         table->setItem(i, 1, item2);
     }
+    table->resizeRowsToContents();
 }
 
 QString ShortcutDialog::descriptionForAction(ShortcutAction action)

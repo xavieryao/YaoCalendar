@@ -17,6 +17,11 @@ SideBar::SideBar(QWidget *parent) : QWidget(parent)
     QPalette p = mList->palette();
     p.setColor(QPalette::Highlight, QColor::fromRgb(254,223,194));
     mList->setPalette(p);
+    mList->setSelectionMode(QAbstractItemView::SingleSelection);
+    mList->setDragEnabled(true);
+    mList->viewport()->setAcceptDrops(true);
+    mList->setDropIndicatorShown(true);
+    mList->setDragDropMode(QAbstractItemView::InternalMove);
 //    rootLayout->addWidget(mTextBrowser,3);
     rootLayout->addWidget(mList,7);
 
