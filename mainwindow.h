@@ -17,6 +17,7 @@
 #include <QResizeEvent>
 #include <QTime>
 #include <QFileDialog>
+#include "copyhelper.h"
 #include <QStandardPaths>
 #include <QMessageBox>
 #include <QFile>
@@ -70,7 +71,7 @@ public slots:
 
 private slots:
     void formatAndSetMonthLabel(int year, int month);
-    void onDateActivated(const QDate &date, QString file);
+    void onDateActivated(const QDate &date, QString file, QString fileName);
     void onEventModified(CalendarEvent origEvent, CalendarEvent event, bool isNew);
     void openEventWindow(CalendarEvent event, bool newEvent = false);
     void onDeleteEvent(CalendarEvent& event);

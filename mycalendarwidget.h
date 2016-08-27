@@ -27,7 +27,7 @@ private:
     QList<QPair<QRect, QDate> > mRectDateList;
 
 signals:
-    void newEvent(const QDate& date, QString file = QString());
+    void newEvent(const QDate& date, QString file = QString(), QString fileName=QString());
 };
 
 #endif // MYCALENDARWIDGET_H

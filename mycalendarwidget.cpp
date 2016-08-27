@@ -116,7 +116,7 @@ void MyCalendarWidget::dropEvent(QDropEvent *e)
     }
     e->acceptProposedAction();
     qDebug() << "drop on " << date;
-    emit newEvent(date, e->mimeData()->urls().first().toLocalFile());
+    emit newEvent(date, e->mimeData()->urls().first().toLocalFile(), e->mimeData()->urls().first().fileName());
 }
 
 void MyCalendarWidget::resizeEvent(QResizeEvent *event)

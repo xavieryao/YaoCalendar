@@ -140,7 +140,7 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
     mSideBar->setVisible(event->size().width() >= MIN_WIDTH_WITH_SIDEBAR);
 }
 
-void MainWindow::onDateActivated(const QDate &date, QString file) {
+void MainWindow::onDateActivated(const QDate &date, QString file, QString name) {
     // new event
     CalendarEvent event = CalendarEvent::newInstance();
     QDateTime startTime, endTime;
@@ -152,11 +152,11 @@ void MainWindow::onDateActivated(const QDate &date, QString file) {
     endTime.setTime(currentTime.addSecs(60*120));
     event.setStartTime(startTime);
     event.setEndTime(endTime);
-    event.setAttachment(file);
 
     if (file != QString()) {
         QFileInfo info(file);
         event.setEventName(info.fileName());
+        event.setAttachment(CopyHelper::store(file, name));
     }
 
     openEventWindow(event, true);

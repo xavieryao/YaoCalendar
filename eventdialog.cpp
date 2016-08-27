@@ -274,6 +274,9 @@ void EventDialog::onFileDropped(const QUrl &url) {
     QString fileName = url.fileName();
     QString store = CopyHelper::store(fromFile, fileName);
     mEvent.setAttachment(store);
+    if (mTitleEdit->text().isEmpty()) {
+        this->mTitleEdit->setText(fileName);
+    }
     mAttachment->setFile(fromFile);
 }
 

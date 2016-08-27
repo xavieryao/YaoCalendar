@@ -10,7 +10,7 @@ WaveWidget::WaveWidget(QWidget *parent)
     : QWidget(parent)
 {
     this->setFixedSize(323,323);
-    setProgress(0.5);
+    setProgress(0);
     QRegion maskedRegion(geometry(), QRegion::Ellipse);
     setMask(maskedRegion);
     setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
