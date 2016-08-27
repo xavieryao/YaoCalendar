@@ -466,17 +466,17 @@ void MainWindow::configureShortcuts()
     QList<QString> keys = map.keys();
     for(int i = 0; i < keys.size(); i++) {
         QString key = keys.at(i);
-        ShortcutActions action = map.value(key).value<ShortcutActions>();
+        ShortcutAction action = map.value(key).value<ShortcutAction>();
             QShortcut* shortcut = new QShortcut(QKeySequence(key, QKeySequence::PortableText), this);
         switch (action) {
-        case ShortcutActions::NEW:
+        case ShortcutAction::NEW:
             qDebug() << "new shortcut";
             connect(shortcut, &QShortcut::activated, [=]{
                 qDebug() << "new clicked";
                 onDateActivated(ui->calendarWidget->selectedDate());
             });
             break;
-        case ShortcutActions::DELETE:
+        case ShortcutAction::DELETE:
             connect(shortcut, &QShortcut::activated, [=]{
                 if (mSideBar->hasSelected()) {
                     CalendarEvent e = mSideBar->selectedEvent();
@@ -484,20 +484,20 @@ void MainWindow::configureShortcuts()
                 }
             });
             break;
-        case ShortcutActions::NEXT_MONTH:
+        case ShortcutAction::NEXT_MONTH:
             connect(shortcut, &QShortcut::activated, ui->calendarWidget, &MyCalendarWidget::showNextMonth);
             break;
-        case ShortcutActions::PREV_MONTH:
+        case ShortcutAction::PREV_MONTH:
             connect(shortcut, &QShortcut::activated, ui->calendarWidget, &MyCalendarWidget::showPreviousMonth);
             break;
-        case ShortcutActions::TODAY:
+        case ShortcutAction::TODAY:
             connect(shortcut, &QShortcut::activated, [=]{
                 ui->calendarWidget->showToday();
                 ui->calendarWidget->setSelectedDate(QDate::currentDate());
                 mSideBar->updateEventList(ui->calendarWidget->selectedDate());
             });
             break;
-        case ShortcutActions::PIN:
+        case ShortcutAction::PIN:
             connect(shortcut, &QShortcut::activated, this, &MainWindow::onPin);
             break;
         default:

@@ -33,16 +33,12 @@
 #include <QShortcut>
 #include "eventdialog.h"
 #include "eventmaphelper.h"
+#include "types.h"
 
 namespace Ui {
 class MainWindow;
 }
 
-enum ShortcutActions {
-    NEW, DELETE, NEXT_MONTH, PREV_MONTH, TODAY, PIN
-};
-
-Q_DECLARE_METATYPE(ShortcutActions)
 
 class MainWindow : public QMainWindow
 {

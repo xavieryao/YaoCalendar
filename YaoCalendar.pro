@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     attachmentwidget.cpp \
     wavewidget.cpp \
     qtfilecopier.cpp \
-    copyhelper.cpp
+    copyhelper.cpp \
+    shortcutdialog.cpp
 
 HEADERS  += mainwindow.h \
     mycalendarwidget.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     attachmentwidget.h \
     wavewidget.h \
     qtfilecopier.h \
-    copyhelper.h
+    copyhelper.h \
+    shortcutdialog.h
 
 FORMS    += mainwindow.ui
 
