@@ -8,12 +8,12 @@
 #include <QFont>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QDebug>
 #include "editshortdialog.h"
 
 ShortcutDialog::ShortcutDialog(QWidget* parent) : QDialog(parent)
 {
-    QSettings settings("./config.plist", QSettings::IniFormat);
-
+    setWindowTitle(tr("Shortcuts"));
     QTableWidget* table = new QTableWidget(this);
     setUpTable(table);
 
@@ -42,8 +42,9 @@ ShortcutDialog::ShortcutDialog(QWidget* parent) : QDialog(parent)
     connect(btnAdd, &QPushButton::clicked, [=]{
        EditShortDialog* dialog = new EditShortDialog(this);
        connect(dialog, &EditShortDialog::modified, [=](QString key, ShortcutAction act){
+           QSettings settings("./config.plist", QSettings::IniFormat);
            QMap<QString, QVariant> map = settings.value("shortcuts").toMap();
-           map.insert(key, QVariant::fromValue(act));
+           map.insert(key, static_cast<int>(act));
            settings.setValue("shortcuts", map);
            setUpTable(table);
        });
@@ -54,10 +55,30 @@ ShortcutDialog::ShortcutDialog(QWidget* parent) : QDialog(parent)
         if (table->selectedItems().size() == 0) {
             return;
         }
+        QSettings settings("./config.plist", QSettings::IniFormat);
         QMap<QString, QVariant> map = settings.value("shortcuts").toMap();
-//        map.remove(table->selectedItems().first())
-        // TODO!
+        qDebug() << "remove" << table->selectedItems().first()->data(Qt::UserRole).toString();
+        map.remove(table->selectedItems().first()->data(Qt::UserRole).toString());
+        settings.setValue("shortcuts", map);
         setUpTable(table);
+    });
+
+    connect(btnEdit, &QPushButton::clicked, [=]{
+        if (table->selectedItems().size() == 0) {
+            return;
+        }
+        EditShortDialog* dialog =
+                new EditShortDialog(this, table->selectedItems().first()->data(Qt::UserRole).toString(),
+                                    ShortcutAction(table->selectedItems()[1]->data(Qt::UserRole).toInt()));
+        connect(dialog, &EditShortDialog::modified, [=](QString key, ShortcutAction act){
+            QSettings settings("./config.plist", QSettings::IniFormat);
+            QMap<QString, QVariant> map = settings.value("shortcuts").toMap();
+            map.remove(table->selectedItems().first()->data(Qt::UserRole).toString());
+            map.insert(key, static_cast<int>(act));
+            settings.setValue("shortcuts", map);
+            setUpTable(table);
+        });
+        dialog->exec();
     });
 
     ctrlLay->addStretch();
@@ -77,10 +98,16 @@ void ShortcutDialog::setUpTable(QTableWidget* table)
     QList<QString> keys = map.keys();
     table->setRowCount(keys.size());
     for (int i = 0; i < keys.size(); i++) {
-        QString des = descriptionForAction(map.value(keys.at(i)).value<ShortcutAction>());
+        ShortcutAction act = map.value(keys.at(i)).value<ShortcutAction>();
+        QString des = descriptionForAction(act);
         QString shortCut = QKeySequence(keys.at(i), QKeySequence::PortableText).toString(QKeySequence::NativeText);
-        table->setItem(i, 0, new QTableWidgetItem(shortCut));
-        table->setItem(i, 1, new QTableWidgetItem(des));
+        QTableWidgetItem* item1 = new QTableWidgetItem(shortCut);
+        QTableWidgetItem* item2 = new QTableWidgetItem(des);
+        item1->setData(Qt::UserRole, keys.at(i));
+        item2->setData(Qt::UserRole, static_cast<int>(act));
+
+        table->setItem(i, 0, item1);
+        table->setItem(i, 1, item2);
     }
 }
 

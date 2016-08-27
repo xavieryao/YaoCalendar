@@ -34,6 +34,7 @@
 #include "eventdialog.h"
 #include "eventmaphelper.h"
 #include "types.h"
+#include "shortcutdialog.h"
 
 namespace Ui {
 class MainWindow;

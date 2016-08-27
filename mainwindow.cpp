@@ -357,6 +357,14 @@ void MainWindow::configureMultiUser(QStringList& userList)
         mSettings->setValue("droppable", droppable->isChecked());
     });
     settings->addAction(droppable);
+
+    settings->addSeparator();
+    QAction* shorts = new QAction(tr("Shortcuts..."), this);
+    connect(shorts, &QAction::triggered, [=]{
+        ShortcutDialog* diag = new ShortcutDialog(this);
+        diag->exec();
+    });
+    settings->addAction(shorts);
 }
 
 void MainWindow::onUserChanged()
@@ -466,7 +474,7 @@ void MainWindow::configureShortcuts()
     QList<QString> keys = map.keys();
     for(int i = 0; i < keys.size(); i++) {
         QString key = keys.at(i);
-        ShortcutAction action = map.value(key).value<ShortcutAction>();
+        ShortcutAction action = ShortcutAction(map.value(key).toInt());
             QShortcut* shortcut = new QShortcut(QKeySequence(key, QKeySequence::PortableText), this);
         switch (action) {
         case ShortcutAction::NEW:
