@@ -9,9 +9,10 @@ class ShortcutDialog : public QDialog
     Q_OBJECT
 public:
     ShortcutDialog(QWidget* parent = 0);
+    static QString descriptionForAction(ShortcutAction action);
+
 
 private:
-    QString descriptionForAction(ShortcutAction action);
 };
 
 #endif // SHORTCUTDIALOG_H
