@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) :
     ui(new Ui::MainWindow)
 {
 
-    mSettings = new QSettings("./config.plist", QSettings::IniFormat,
+    mSettings = new QSettings("./config.ini", QSettings::IniFormat,
                               this);
 
     QFontDatabase::addApplicationFont(":Font/fontawesome");
@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) :
     connect(mSideBar, &SideBar::deleteEvent, this, &MainWindow::onDeleteEvent);
 
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
-    configureMultiUser(userList);
+    configureMenu(userList);
     configureShortcuts();
 }
 
@@ -307,7 +307,7 @@ void MainWindow::onDeleteEvent(CalendarEvent &event)
     mEventStorage->saveToFile();
 }
 
-void MainWindow::configureMultiUser(QStringList& userList)
+void MainWindow::configureMenu(QStringList& userList)
 {
 #ifdef Q_OS_OSX
     if (this->windowFlags() & Qt::WindowTransparentForInput) {
@@ -350,10 +350,11 @@ void MainWindow::configureMultiUser(QStringList& userList)
 
     // configure settigns menu
     QMenu* settings = menuBar()->addMenu(tr("&Preferences"));
-    QAction* droppable = new QAction(tr("Drop File"), this);
+    QAction* droppable = new QAction(tr("Enable Drop"), this);
     droppable->setCheckable(true);
     droppable->setChecked(mSettings->value("droppable", true).toBool());
     connect(droppable, &QAction::triggered, [=]{
+        qDebug() << "tri";
         mSettings->setValue("droppable", droppable->isChecked());
     });
     settings->addAction(droppable);
@@ -365,6 +366,47 @@ void MainWindow::configureMultiUser(QStringList& userList)
         diag->exec();
     });
     settings->addAction(shorts);
+
+    settings->addSeparator();
+    QAction* exportConfig = new QAction(tr("Export Config..."), this);
+    connect(exportConfig, &QAction::triggered, [=]{
+        QString saveFile = QFileDialog::getSaveFileName(this, tr("Export to..."),
+                                                        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)+"/config.ini",
+                                                        "INI Files(*.ini)");
+        if (saveFile.isEmpty()) {
+            return;
+        }
+        if (QFile(saveFile).exists()) {
+            QFile::remove(saveFile);
+        }
+        QFile::copy("./config.ini", saveFile);
+    });
+    settings->addAction(exportConfig);
+
+    QAction* loadConfig = new QAction(tr("Load Config..."), this);
+    connect(loadConfig, &QAction::triggered, [=]{
+        QString saveFile = QFileDialog::getOpenFileName(this, tr("Load config from..."),
+                                                        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
+                                                        "INI Files (*.ini)");
+        if (saveFile.isEmpty()) {
+            return;
+        }
+
+        if (QMessageBox::Yes ==
+                QMessageBox::question(this, tr("Confirm Loading Config"),
+                                                          tr("Are you sure to load config from file %1?").arg(saveFile))) {
+            if (QFile("./config.ini").exists()) {
+                QFile::remove("./config.ini");
+            }
+            QFile::copy(saveFile, "./config.ini");
+            mSettings->deleteLater();
+            mSettings = new QSettings("./config.ini", QSettings::IniFormat,
+                                      this);
+            QStringList userList = mSettings->value("users").toStringList();
+            configureMenu(userList);
+        }
+    });
+    settings->addAction(loadConfig);
 }
 
 void MainWindow::onUserChanged()
@@ -404,7 +446,7 @@ void MainWindow::addUser()
     }
     userList.append(userName);
     mSettings->setValue("users", userList);
-    configureMultiUser(userList);
+    configureMenu(userList);
 }
 
 void MainWindow::editUser()
@@ -429,7 +471,7 @@ void MainWindow::editUser()
     userList.append(userName);
     mSettings->setValue("users", userList);
     mSettings->setValue("currentUser", userName);
-    configureMultiUser(userList);
+    configureMenu(userList);
 }
 
 void MainWindow::exportEvents()

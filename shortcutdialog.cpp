@@ -42,7 +42,7 @@ ShortcutDialog::ShortcutDialog(QWidget* parent) : QDialog(parent)
     connect(btnAdd, &QPushButton::clicked, [=]{
        EditShortDialog* dialog = new EditShortDialog(this);
        connect(dialog, &EditShortDialog::modified, [=](QString key, ShortcutAction act){
-           QSettings settings("./config.plist", QSettings::IniFormat);
+           QSettings settings("./config.ini", QSettings::IniFormat);
            QMap<QString, QVariant> map = settings.value("shortcuts").toMap();
            map.insert(key, static_cast<int>(act));
            settings.setValue("shortcuts", map);
@@ -55,7 +55,7 @@ ShortcutDialog::ShortcutDialog(QWidget* parent) : QDialog(parent)
         if (table->selectedItems().size() == 0) {
             return;
         }
-        QSettings settings("./config.plist", QSettings::IniFormat);
+        QSettings settings("./config.ini", QSettings::IniFormat);
         QMap<QString, QVariant> map = settings.value("shortcuts").toMap();
         qDebug() << "remove" << table->selectedItems().first()->data(Qt::UserRole).toString();
         map.remove(table->selectedItems().first()->data(Qt::UserRole).toString());
@@ -71,7 +71,7 @@ ShortcutDialog::ShortcutDialog(QWidget* parent) : QDialog(parent)
                 new EditShortDialog(this, table->selectedItems().first()->data(Qt::UserRole).toString(),
                                     ShortcutAction(table->selectedItems()[1]->data(Qt::UserRole).toInt()));
         connect(dialog, &EditShortDialog::modified, [=](QString key, ShortcutAction act){
-            QSettings settings("./config.plist", QSettings::IniFormat);
+            QSettings settings("./config.ini", QSettings::IniFormat);
             QMap<QString, QVariant> map = settings.value("shortcuts").toMap();
             map.remove(table->selectedItems().first()->data(Qt::UserRole).toString());
             map.insert(key, static_cast<int>(act));
@@ -91,7 +91,7 @@ ShortcutDialog::ShortcutDialog(QWidget* parent) : QDialog(parent)
 
 void ShortcutDialog::setUpTable(QTableWidget* table)
 {
-    QSettings settings("./config.plist", QSettings::IniFormat);
+    QSettings settings("./config.ini", QSettings::IniFormat);
     table->setSelectionBehavior(QTableWidget::SelectRows);
     QMap<QString, QVariant> map = settings.value("shortcuts").toMap();
     table->setColumnCount(2);

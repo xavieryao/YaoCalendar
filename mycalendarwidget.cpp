@@ -97,7 +97,7 @@ void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDa
 
 void MyCalendarWidget::dragEnterEvent(QDragEnterEvent *e)
 {
-    QSettings settings("./config.plist", QSettings::IniFormat,
+    QSettings settings("./config.ini", QSettings::IniFormat,
                                   this);
     if (e->mimeData()->hasUrls() && e->mimeData()->urls().size() == 1 && settings.value("droppable", true).toBool()) {
         e->acceptProposedAction();

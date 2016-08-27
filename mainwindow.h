@@ -65,7 +65,7 @@ private:
     QMenu* mMenuUser;
 
     void setUpCalendarNavigator();
-    void configureMultiUser(QStringList& userList);
+    void configureMenu(QStringList& userList);
     void configureShortcuts();
 
     static const int MIN_WIDTH_WITH_SIDEBAR = 595;
