@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) :
     QMainWindow(parent, flags),
     ui(new Ui::MainWindow)
 {
+
     mSettings = new QSettings("./config.plist", QSettings::IniFormat,
                               this);
 
@@ -54,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) :
 
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
     configureMultiUser(userList);
+    configureShortcuts();
 }
 
 MainWindow::~MainWindow()
@@ -474,5 +476,43 @@ void MainWindow::importEvents()
         mSideBar->setEventMap(mEventMap);
         mSideBar->updateEventList(ui->calendarWidget->selectedDate());
     }
+
+}
+
+void MainWindow::configureShortcuts()
+{
+    QMap<QString, QVariant> map = mSettings->value("shortcuts").toMap();
+    // DEBUG
+    map.insert("Ctrl+O", QVariant::fromValue(ShortcutActions::DELETE));
+    map.insert("Ctrl+P", QVariant::fromValue(ShortcutActions::NEW));
+
+    QList<QString> keys = map.keys();
+    for(int i = 0; i < keys.size(); i++) {
+        QString key = keys.at(i);
+        ShortcutActions action = map.value(key).value<ShortcutActions>();
+            QShortcut* shortcut = new QShortcut(QKeySequence(key), this);
+        switch (action) {
+        case ShortcutActions::NEW:
+            qDebug() << "new shortcut";
+            connect(shortcut, &QShortcut::activated, [=]{
+                qDebug() << "new clicked";
+                onDateActivated(ui->calendarWidget->selectedDate());
+            });
+            break;
+        case ShortcutActions::DELETE:
+            connect(shortcut, &QShortcut::activated, [=]{
+                if (mSideBar->hasSelected()) {
+                    CalendarEvent e = mSideBar->selectedEvent();
+                    onDeleteEvent(e);
+                }
+            });
+            break;
+        default:
+
+            break;
+        }
+    }
+
+
 
 }

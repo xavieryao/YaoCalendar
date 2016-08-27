@@ -18,6 +18,16 @@ public:
         mEventMap = map;
     }
 
+    CalendarEvent selectedEvent() const
+    {
+        return mList->selectedItems().first()->data(Qt::UserRole).value<CalendarEvent>();
+    }
+
+    bool hasSelected() const
+    {
+        return (mList->count() > 0) && (mList->selectedItems().size() > 0);
+    }
+
 
 signals:
     void editEvent(CalendarEvent event, bool isNew = false);

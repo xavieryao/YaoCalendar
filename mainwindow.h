@@ -30,12 +30,19 @@
 #include <QSystemTrayIcon>
 #include <QSettings>
 #include <QMenuBar>
+#include <QShortcut>
 #include "eventdialog.h"
 #include "eventmaphelper.h"
 
 namespace Ui {
 class MainWindow;
 }
+
+enum ShortcutActions {
+    NEW, DELETE
+};
+
+Q_DECLARE_METATYPE(ShortcutActions)
 
 class MainWindow : public QMainWindow
 {
@@ -62,6 +69,7 @@ private:
 
     void setUpCalendarNavigator();
     void configureMultiUser(QStringList& userList);
+    void configureShortcuts();
 
     static const int MIN_WIDTH_WITH_SIDEBAR = 595;
     static const int SIDE_BAR_WIDTH = 240;
@@ -71,7 +79,7 @@ public slots:
 
 private slots:
     void formatAndSetMonthLabel(int year, int month);
-    void onDateActivated(const QDate &date, QString file, QString fileName);
+    void onDateActivated(const QDate &date, QString file = QString(), QString fileName = QString());
     void onEventModified(CalendarEvent origEvent, CalendarEvent event, bool isNew);
     void openEventWindow(CalendarEvent event, bool newEvent = false);
     void onDeleteEvent(CalendarEvent& event);
