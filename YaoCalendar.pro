@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     eventmaphelper.cpp \
     dndtextedit.cpp \
     attachmentwidget.cpp \
-    wavewidget.cpp
+    wavewidget.cpp \
+    qtfilecopier.cpp
 
 HEADERS  += mainwindow.h \
     mycalendarwidget.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     eventmaphelper.h \
     dndtextedit.h \
     attachmentwidget.h \
-    wavewidget.h
+    wavewidget.h \
+    qtfilecopier.h
 
 FORMS    += mainwindow.ui
 
