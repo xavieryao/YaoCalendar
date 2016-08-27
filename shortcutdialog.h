@@ -2,6 +2,7 @@
 #define SHORTCUTDIALOG_H
 
 #include <QDialog>
+#include <QTableWidget>
 #include "types.h"
 
 class ShortcutDialog : public QDialog
@@ -13,6 +14,7 @@ public:
 
 
 private:
+    void setUpTable(QTableWidget* table);
 };
 
 #endif // SHORTCUTDIALOG_H

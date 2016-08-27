@@ -41,7 +41,8 @@ HEADERS  += mainwindow.h \
     wavewidget.h \
     qtfilecopier.h \
     copyhelper.h \
-    shortcutdialog.h
+    shortcutdialog.h \
+    editshortdialog.h
 
 FORMS    += mainwindow.ui
 
