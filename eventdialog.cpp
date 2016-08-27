@@ -272,7 +272,8 @@ void EventDialog::onFileDropped(const QUrl &url) {
     qDebug() << "file dropped" << url.toLocalFile();
     QString fromFile = url.toLocalFile();
     QString fileName = url.fileName();
-    QString store = CopyHelper::store(fromFile, fileName);
+    CopyHelper helper;
+    QString store = helper.store(fromFile, fileName);
     mEvent.setAttachment(store);
     mAttachment->setFile(fromFile);
 }
