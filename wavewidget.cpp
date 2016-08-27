@@ -13,7 +13,7 @@ WaveWidget::WaveWidget(QWidget *parent)
     setProgress(0.5);
     QRegion maskedRegion(geometry(), QRegion::Ellipse);
     setMask(maskedRegion);
-    setWindowFlags(Qt::FramelessWindowHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     setAttribute(Qt::WA_TranslucentBackground);
 }
 
