@@ -67,6 +67,7 @@ private:
     void setUpCalendarNavigator();
     void configureMenu(QStringList& userList);
     void configureShortcuts();
+    void configureNotifications();
 
     static const int MIN_WIDTH_WITH_SIDEBAR = 595;
     static const int SIDE_BAR_WIDTH = 240;

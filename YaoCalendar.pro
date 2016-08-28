@@ -44,6 +44,14 @@ HEADERS  += mainwindow.h \
     shortcutdialog.h \
     editshortdialog.h
 
+macx: {
+    HEADERS += notifier.h
+    OBJECTIVE_SOURCES += notifier.mm
+    LIBS += -framework Foundation
+    QMAKE_LFLAGS += -F /System/Library/Frameworks/Foundation.framework/
+}
+
+
 FORMS    += mainwindow.ui
 
 DISTFILES +=

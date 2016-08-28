@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#ifdef Q_OS_OSX
+#include "notifier.h"
+#endif
+
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) :
     QMainWindow(parent, flags),
     ui(new Ui::MainWindow)
@@ -56,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) :
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
     configureMenu(userList);
     configureShortcuts();
+    configureNotifications();
 }
 
 MainWindow::~MainWindow()
@@ -581,3 +586,15 @@ void MainWindow::onPin()
 #endif
 }
 
+void MainWindow::configureNotifications()
+{
+#ifdef Q_OS_OSX
+    OSXNotifier* notifier = new OSXNotifier(this);
+    notifier->clear();
+    for (auto event: mEventMap->value(QDate::currentDate())) {
+        if (!event.isAllDayEvent()) {
+            notifier->scheduleNoticition(tr("Calendar Event"), event.eventName(), event.location(), event.startDateTime());
+        }
+    }
+#endif
+}
