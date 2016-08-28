@@ -193,6 +193,7 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
             mSideBar->updateEventList(ui->calendarWidget->selectedDate());
             ui->calendarWidget->update();
             mEventStorage->saveToFile();
+            configureNotifications();
             return;
         } else {
             EventMap m = origEvent.expandToMap();
@@ -209,7 +210,7 @@ void MainWindow::onEventModified(const CalendarEvent origEvent, CalendarEvent ev
     ui->calendarWidget->update();
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
     mEventStorage->saveToFile();
-
+    configureNotifications();
 }
 
 void MainWindow::openEventWindow(CalendarEvent event, bool newEvent) {
@@ -299,7 +300,7 @@ void MainWindow::onDeleteEvent(CalendarEvent &event)
         ui->calendarWidget->update();
         mSideBar->updateEventList(ui->calendarWidget->selectedDate());
         mEventStorage->saveToFile();
-
+        configureNotifications();
         return;
     } else {
         EventMap m = event.expandToMap();
@@ -310,6 +311,7 @@ void MainWindow::onDeleteEvent(CalendarEvent &event)
     ui->calendarWidget->update();
     mSideBar->updateEventList(ui->calendarWidget->selectedDate());
     mEventStorage->saveToFile();
+    configureNotifications();
 }
 
 void MainWindow::configureMenu(QStringList& userList)
