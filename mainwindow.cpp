@@ -15,6 +15,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) :
 
     QFontDatabase::addApplicationFont(":Font/fontawesome");
     QFontDatabase::addApplicationFont(":Font/nevis");
+
+    setWindowIcon(QIcon(":/icon/icon"));
+
     ui->setupUi(this);
 
     ui->calendarWidget->setNavigationBarVisible(false);

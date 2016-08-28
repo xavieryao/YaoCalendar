@@ -8,6 +8,7 @@
     </qresource>
     <qresource prefix="/icon">
         <file alias="pin">res/pin.png</file>
+        <file alias="icon">icon_256x256.png</file>
     </qresource>
     <qresource prefix="/translations">
         <file alias="zh_CN">yaocalendar_zh_CN.qm</file>

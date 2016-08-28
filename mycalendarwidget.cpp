@@ -91,7 +91,9 @@ void MyCalendarWidget::paintCell(QPainter *painter, const QRect &rect, const QDa
         painter->setPen(QColor::fromRgb(35,38,39));
     }
     painter->setBackgroundMode(Qt::BGMode::TransparentMode);
-    painter->drawText(rect, Qt::AlignHCenter, QString::number(date.day()));
+    QRect textRect = rect;
+    textRect.setTop(rect.top() + rect.height()*0.05);
+    painter->drawText(textRect, Qt::AlignHCenter, QString::number(date.day()));
     painter->restore();
 }
 

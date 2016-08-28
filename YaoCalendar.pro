@@ -51,7 +51,6 @@ macx: {
     QMAKE_LFLAGS += -F /System/Library/Frameworks/Foundation.framework/
 }
 
-
 FORMS    += mainwindow.ui
 
 DISTFILES +=
@@ -60,3 +59,5 @@ RESOURCES += \
     res.qrc
 
 TRANSLATIONS += yaocalendar_zh_CN.ts yaocalendar_en.ts
+
+ICON = icon.icns
